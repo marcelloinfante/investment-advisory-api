@@ -34,11 +34,26 @@ gem "bootsnap", require: false
 # gem "image_processing", "~> 1.2"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem "rack-cors"
+gem "rack-cors"
+
+# Use bcrypt for authentication
+gem "bcrypt"
+
+# Use jwt to encode and decode jwt hashes
+gem "jwt"
+
+# Use jsonapi-serializer to create fasts serializers
+gem "jsonapi-serializer"
+
+# Use discard to soft-delete
+gem 'discard', "~> 1.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem "rspec-rails", "~> 6.0.0"
+  gem "factory_bot_rails"
+  gem "faker"
 end
 
 group :development do

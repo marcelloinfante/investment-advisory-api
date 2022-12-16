@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  namespace :api do
+    namespace :v1 do
+      post "user/signup", to: "users#signup"
+      post "user/signin", to: "users#signin"
+      delete "user", to: "users#destroy"
+      put "user", to: "users#update"
+      get "user", to: "users#show"
+    end
+  end
 end
