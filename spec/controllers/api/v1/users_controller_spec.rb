@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Api::V1::UsersController", type: :request do
+RSpec.describe Api::V1::UsersController, type: :request do
   describe "POST signup" do
     context "sucess scenario" do
       let(:user_params) { attributes_for(:user).with_indifferent_access }
