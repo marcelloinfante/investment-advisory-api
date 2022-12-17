@@ -7,13 +7,10 @@ class Api::V1::UsersController < ApplicationController
 
     if user.save
       token = create_token(user.id)
-      render json: { user: UserSerializer.new(user), token: }
+      user = UserSerializer.new(user).sanitized_hash
+      render status: :created, json: { user:, token: }
     else
-      if user.errors.messages
-        render json: { error: user.errors.messages }
-      else
-        render json: { error: "User could not be created. Please try again." }
-      end
+      render status: :bad_request, json: { error: user.errors.messages }
     end
   end
 
@@ -23,33 +20,37 @@ class Api::V1::UsersController < ApplicationController
 
     if user&.authenticate(user_params[:password])
       token = create_token(user.id)
-      render json: { user: UserSerializer.new(user), token: }
+      user = UserSerializer.new(user).sanitized_hash
+      render json: { user:, token: }
     else
-      render json: { error: "Incorrect username or password." }
+      render status: :bad_request, json: { error: "Incorrect username or password." }
     end
   end
 
   # DELETE /api/v1/user
   def destroy
     if current_user.discard
-      render json: UserSerializer.new(current_user)
+      user = UserSerializer.new(current_user).sanitized_hash
+      render json: { user: }
     else
-      render json: { error: "User couldn't be deleted." }
+      render status: :bad_request, json: { error: "User couldn't be deleted." }
     end
   end
 
   # PUT /api/v1/user
   def update
     if current_user.update(user_params)
-      render json: UserSerializer.new(current_user)
+      user = UserSerializer.new(current_user).sanitized_hash
+      render json: { user: }
     else
-      render json: { error: "User couldn't be updated." }
+      render status: :bad_request, json: { error: "User couldn't be updated." }
     end
   end
 
   # GET /api/v1/user
   def show
-    render json: UserSerializer.new(current_user)
+    user = UserSerializer.new(current_user).sanitized_hash
+    render json: { user: }
   end
 
   private
