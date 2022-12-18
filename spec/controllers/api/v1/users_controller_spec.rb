@@ -199,6 +199,23 @@ RSpec.describe Api::V1::UsersController, type: :request do
         end
       end
 
+      context "raise error if password confirmation don't macht" do
+        before(:each) do
+          post "/api/v1/user/signup", params: attributes_for(:user, password_confirmation: "asdfsajdhf")
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => { "password_confirmation" => ["doesn't match Password"] }}
+
+          expect(body).to eq(error_message)
+        end
+      end
+
       context "raise error if email already exists" do
         before(:each) do
           user_params = attributes_for(:user).with_indifferent_access
@@ -369,6 +386,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
         returned_user = body[:user].transform_keys(&:to_sym)
 
         user_params.delete(:password)
+        user_params.delete(:password_confirmation)
 
         expect(returned_user).to eq(user_params)
       end
@@ -483,6 +501,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
         returned_user = body[:user].transform_keys(&:to_sym)
 
         params.delete(:password)
+        params.delete(:password_confirmation)
 
         expect(returned_user).to eq(params)
       end
