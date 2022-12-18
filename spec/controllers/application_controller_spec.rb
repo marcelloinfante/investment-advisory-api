@@ -15,7 +15,12 @@ RSpec.describe ApplicationController, type: :request do
         token = object.create_token(1)
         decoded_token = JsonWebToken.decode(token)
 
-        expect(decoded_token).to eq({"user_id" => 1})
+        payload = {
+          user_id: 1,
+          exp: decoded_token[:exp]
+        }
+
+        expect(decoded_token).to eq(payload.transform_keys(&:to_s))
       end
     end
 

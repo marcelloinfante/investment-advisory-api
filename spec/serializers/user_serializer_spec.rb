@@ -7,7 +7,8 @@ RSpec.describe UserSerializer do
       serialized_user = UserSerializer.new(user).sanitized_hash
 
       expect(serialized_user).to include({
-        name: user.name,
+        first_name: user.first_name,
+        last_name: user.last_name,
         email: user.email
       })
     end

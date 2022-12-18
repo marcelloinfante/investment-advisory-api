@@ -9,11 +9,13 @@ RSpec.describe JsonWebToken do
     end
 
     it "return decoded hash" do
-      payload = { "user_id" => 1 }
+      payload = { user_id: 1 }
       token = JsonWebToken.encode(payload)
 
       decoded_hash = JsonWebToken.decode(token)
-      expect(decoded_hash).to eq(payload)
+
+      payload[:exp] = decoded_hash[:exp]
+      expect(decoded_hash).to eq(payload.transform_keys(&:to_s))
     end
   end
 end

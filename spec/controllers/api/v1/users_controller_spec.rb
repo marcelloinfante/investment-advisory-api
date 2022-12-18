@@ -1,6 +1,111 @@
 require "rails_helper"
 
 RSpec.describe Api::V1::UsersController, type: :request do
+  describe "GET refresh" do
+    context "sucess scenario" do
+      let(:user) { create(:user) }
+
+      before(:each) do
+        user_id = user.id
+        token = JsonWebToken.encode({ user_id: })
+
+        headers = { "Authorization": "Bearer #{token}" }
+
+        get "/api/v1/user/refresh", headers:
+      end
+
+      it "have status 200" do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "return json web token" do
+        body = JSON.parse(response.body).with_indifferent_access
+        token = body[:token]
+  
+        expect(token).not_to be_empty
+      end
+    end
+
+    context "error scenario" do
+      context "raise error if token is not provided" do
+        before(:each) do
+          get "/api/v1/user"
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+
+      context "raise error if token is invalid" do
+        before(:each) do
+          token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNzl9.T-B9ZoVNSUyt7PQk50ldKUm1wI5mP2OSP6urI-8XgV4"
+
+          get "/api/v1/user", headers: { "Authorization": "Bearer #{token}" }
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+
+      context "raise error if user is deleted" do
+        before(:each) do
+          user = create(:user)
+          user.discard
+          token = JsonWebToken.encode({ user_id: user.id })
+
+          get "/api/v1/user", headers: { "Authorization": "Bearer #{token}" }
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+
+      context "raise error if token is expired" do
+        before(:each) do
+          user = create(:user)
+          token = JsonWebToken.encode({ user_id: user.id }, Time.now - 1.hour)
+
+          get "/api/v1/user", headers: { "Authorization": "Bearer #{token}" }
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+    end
+  end
+
   describe "POST signup" do
     context "sucess scenario" do
       let(:user_params) { attributes_for(:user).with_indifferent_access }
@@ -17,15 +122,6 @@ RSpec.describe Api::V1::UsersController, type: :request do
         expect(User.all).not_to be_empty
       end
   
-      it "return serialized user" do
-        body = JSON.parse(response.body).with_indifferent_access
-        returned_user = body[:user].transform_keys(&:to_sym)
-  
-        user_params.delete(:password)
-  
-        expect(returned_user).to eq(user_params)
-      end
-  
       it "return json web token" do
         body = JSON.parse(response.body).with_indifferent_access
         token = body[:token]
@@ -35,9 +131,9 @@ RSpec.describe Api::V1::UsersController, type: :request do
     end
 
     context "error scenario" do
-      context "raise error if name is not provided" do
+      context "raise error if first_name is not provided" do
         before(:each) do
-          post "/api/v1/user/signup", params: attributes_for(:user, name: nil)
+          post "/api/v1/user/signup", params: attributes_for(:user, first_name: nil)
         end
 
         it "return status 400" do
@@ -46,7 +142,24 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
         it "return error message" do
           body = JSON.parse(response.body)
-          error_message = { "error" => { "name" => ["can't be blank"] }}
+          error_message = { "error" => { "first_name" => ["can't be blank"] }}
+
+          expect(body).to eq(error_message)
+        end
+      end
+
+      context "raise error if last_name is not provided" do
+        before(:each) do
+          post "/api/v1/user/signup", params: attributes_for(:user, last_name: nil)
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => { "last_name" => ["can't be blank"] }}
 
           expect(body).to eq(error_message)
         end
@@ -139,15 +252,6 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
       it "have status 200" do
         expect(response).to have_http_status(:ok)
-      end
-
-      it "return serialized user" do
-        body = JSON.parse(response.body).with_indifferent_access
-        returned_user = body[:user].transform_keys(&:to_sym)
-
-        user_params.delete(:password)
-
-        expect(returned_user).to eq(user_params)
       end
 
       it "return json web token" do
@@ -333,6 +437,26 @@ RSpec.describe Api::V1::UsersController, type: :request do
           expect(body).to eq(error_message)
         end
       end
+
+      context "raise error if token is expired" do
+        before(:each) do
+          user = create(:user)
+          token = JsonWebToken.encode({ user_id: user.id }, Time.now - 1.hour)
+
+          delete "/api/v1/user", headers: { "Authorization": "Bearer #{token}" }
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
     end
   end
 
@@ -385,6 +509,26 @@ RSpec.describe Api::V1::UsersController, type: :request do
       context "raise error if token is invalid" do
         before(:each) do
           token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNzl9.T-B9ZoVNSUyt7PQk50ldKUm1wI5mP2OSP6urI-8XgV4"
+
+          put "/api/v1/user", headers: { "Authorization": "Bearer #{token}" }
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+
+      context "raise error if token is expired" do
+        before(:each) do
+          user = create(:user)
+          token = JsonWebToken.encode({ user_id: user.id }, Time.now - 1.hour)
 
           put "/api/v1/user", headers: { "Authorization": "Bearer #{token}" }
         end
@@ -520,6 +664,26 @@ RSpec.describe Api::V1::UsersController, type: :request do
       context "raise error if token is invalid" do
         before(:each) do
           token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNzl9.T-B9ZoVNSUyt7PQk50ldKUm1wI5mP2OSP6urI-8XgV4"
+
+          get "/api/v1/user", headers: { "Authorization": "Bearer #{token}" }
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+
+      context "raise error if token is expired" do
+        before(:each) do
+          user = create(:user)
+          token = JsonWebToken.encode({ user_id: user.id }, Time.now - 1.hour)
 
           get "/api/v1/user", headers: { "Authorization": "Bearer #{token}" }
         end

@@ -1,14 +1,19 @@
 class Api::V1::UsersController < ApplicationController
   before_action :authorize_request, except: [:signup, :signin]
 
+  # GET /api/v1/user/signup/refresh
+  def refresh
+    token = create_token(current_user.id)
+    render json: { token: }
+  end
+
   # POST /api/v1/user/signup
   def signup
     user = User.new(user_params)
 
     if user.save
       token = create_token(user.id)
-      user = UserSerializer.new(user).sanitized_hash
-      render status: :created, json: { user:, token: }
+      render status: :created, json: { token: }
     else
       render status: :bad_request, json: { error: user.errors.messages }
     end
@@ -20,8 +25,7 @@ class Api::V1::UsersController < ApplicationController
 
     if user&.authenticate(user_params[:password])
       token = create_token(user.id)
-      user = UserSerializer.new(user).sanitized_hash
-      render json: { user:, token: }
+      render json: { token: }
     else
       render status: :bad_request, json: { error: "Incorrect username or password." }
     end
@@ -56,6 +60,6 @@ class Api::V1::UsersController < ApplicationController
   private
 
   def user_params
-    params.permit(:name, :email, :password)
+    params.permit(:first_name, :last_name, :email, :password)
   end
 end
