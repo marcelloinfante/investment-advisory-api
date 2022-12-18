@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   before_action :authorize_request, except: [:signup, :signin]
 
-  # GET /api/v1/user/signup/refresh
+  # GET /api/v1/user/refresh
   def refresh
     token = create_token(current_user.id)
     render json: { token: }
