@@ -383,7 +383,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
       it "return serialized user" do
         body = JSON.parse(response.body).with_indifferent_access
-        returned_user = body[:user].transform_keys(&:to_sym)
+        returned_user = body.transform_keys(&:to_sym)
 
         user_params.delete(:password)
         user_params.delete(:password_confirmation)
@@ -498,7 +498,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
       it "return serialized user" do
         body = JSON.parse(response.body).with_indifferent_access
-        returned_user = body[:user].transform_keys(&:to_sym)
+        returned_user = body.transform_keys(&:to_sym)
 
         params.delete(:password)
         params.delete(:password_confirmation)
@@ -654,7 +654,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
 
       it "return serialized user" do
         body = JSON.parse(response.body).with_indifferent_access
-        returned_user = body[:user].transform_keys(&:to_sym)
+        returned_user = body.transform_keys(&:to_sym)
 
         serialized_user = UserSerializer.new(user).sanitized_hash
 

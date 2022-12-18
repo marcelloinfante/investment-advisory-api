@@ -35,7 +35,7 @@ class Api::V1::UsersController < ApplicationController
   def destroy
     if current_user.discard
       user = UserSerializer.new(current_user).sanitized_hash
-      render json: { user: }
+      render json: user
     else
       render status: :bad_request, json: { error: "User couldn't be deleted." }
     end
@@ -45,7 +45,7 @@ class Api::V1::UsersController < ApplicationController
   def update
     if current_user.update(user_params)
       user = UserSerializer.new(current_user).sanitized_hash
-      render json: { user: }
+      render json: user
     else
       render status: :bad_request, json: { error: "User couldn't be updated." }
     end
@@ -54,7 +54,7 @@ class Api::V1::UsersController < ApplicationController
   # GET /api/v1/user
   def show
     user = UserSerializer.new(current_user).sanitized_hash
-    render json: { user: }
+    render json: user
   end
 
   private
