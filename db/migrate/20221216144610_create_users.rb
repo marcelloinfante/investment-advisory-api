@@ -7,6 +7,7 @@ class CreateUsers < ActiveRecord::Migration[7.0]
       t.string :password_digest
       t.string :recovery_password_digest
       t.datetime :discarded_at
+      t.belongs_to :company
 
       t.timestamps
     end

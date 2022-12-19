@@ -7,6 +7,9 @@ Rails.application.routes.draw do
       delete "user", to: "users#destroy"
       put "user", to: "users#update"
       get "user", to: "users#show"
+
+      # @TODO: Add company routes
+      # resources :companies
     end
   end
 end
