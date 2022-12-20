@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Clients", type: :request do
+RSpec.describe Api::V1::ClientsController, type: :request do
   describe "GET /index" do
   end
 end

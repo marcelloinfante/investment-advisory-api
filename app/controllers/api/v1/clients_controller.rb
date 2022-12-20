@@ -1,2 +1,2 @@
-class ClientsController < ApplicationController
+class Api::V1::ClientsController < ApplicationController
 end
