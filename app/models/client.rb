@@ -1,11 +1,7 @@
-class User < ApplicationRecord
+class Client < ApplicationRecord
   include Discard::Model
 
-  has_secure_password
-  has_secure_password :recovery_password, validations: false
-
-  has_many :clients
-  belongs_to :company, optional: true
+  belongs_to :user
 
   validates :first_name, presence: true
   validates :last_name, presence: true
