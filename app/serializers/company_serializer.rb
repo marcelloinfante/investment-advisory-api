@@ -1,4 +1,4 @@
-class UserSerializer
+class CompanySerializer
   include JSONAPI::Serializer
   include SerializerHelper
 

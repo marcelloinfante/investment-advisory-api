@@ -6,7 +6,7 @@ RSpec.describe CompanySerializer do
       company = create(:company)
       serialized_company = CompanySerializer.new(company).sanitized_hash
 
-      expect(serialized_company).to include({ name: company.first_name })
+      expect(serialized_company).to include({ name: company.name })
     end
   end
 end
