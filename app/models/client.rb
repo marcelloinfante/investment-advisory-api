@@ -1,6 +1,7 @@
 class Client < ApplicationRecord
   include Discard::Model
 
+  has_many :assets
   belongs_to :user
 
   validates :first_name, presence: true

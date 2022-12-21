@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       get "user", to: "users#show"
       
       resources :clients
+      resources :assets
       # @TODO: Add company routes
       # resources :companies
     end

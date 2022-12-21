@@ -4,7 +4,7 @@ class CreateAssets < ActiveRecord::Migration[7.0]
       t.string :code
       t.string :issuer
       t.string :rate_index
-      t.decimal :entrace_rate
+      t.decimal :entrance_rate
       t.integer :quantity
       t.datetime :application_date
       t.datetime :expiration_date

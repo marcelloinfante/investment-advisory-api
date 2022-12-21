@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_21_002431) do
     t.string "code"
     t.string "issuer"
     t.string "rate_index"
-    t.decimal "entrace_rate"
+    t.decimal "entrance_rate"
     t.integer "quantity"
     t.datetime "application_date"
     t.datetime "expiration_date"
