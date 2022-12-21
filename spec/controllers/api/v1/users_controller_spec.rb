@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Api::V1::UsersController, type: :request do
   describe "GET refresh" do
-    context "sucess scenario" do
+    context "success scenario" do
       let(:user) { create(:user) }
 
       before(:each) do
@@ -107,7 +107,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
   end
 
   describe "POST signup" do
-    context "sucess scenario" do
+    context "success scenario" do
       let(:user_params) { attributes_for(:user).with_indifferent_access }
 
       before(:each) do
@@ -259,7 +259,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
   end
 
   describe "POST signin" do
-    context "sucess scenario" do
+    context "success scenario" do
       let(:user_params) { attributes_for(:user).with_indifferent_access }
 
       before(:each) do
@@ -367,7 +367,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
   end
 
   describe "DELETE destroy" do
-    context "sucess scenario" do
+    context "success scenario" do
       let(:user_params) { attributes_for(:user).with_indifferent_access }
 
       before(:each) do
@@ -479,7 +479,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
   end
 
   describe "PUT update" do
-    context "sucess scenario" do
+    context "success scenario" do
       let(:user_params) { attributes_for(:user).with_indifferent_access }
       let(:params) { attributes_for(:user).with_indifferent_access }
 
@@ -636,7 +636,7 @@ RSpec.describe Api::V1::UsersController, type: :request do
   end
 
   describe "GET show" do
-    context "sucess scenario" do
+    context "success scenario" do
       let(:user) { create(:user) }
 
       before(:each) do

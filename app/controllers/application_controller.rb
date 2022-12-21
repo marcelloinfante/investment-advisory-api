@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  rescue_from StandardError, with: :handle_standard_error
+
   def create_token(user_id)
     JsonWebToken.encode({ user_id: })
   end
@@ -35,5 +37,11 @@ class ApplicationController < ActionController::API
 
   def authorize_request
     render status: :unauthorized, json: { error: "User is not logged in/could not be found." } unless logged_in?
+  end
+
+  private
+
+  def handle_standard_error(error)
+    render status: :bad_request, json: { error: }
   end
 end
