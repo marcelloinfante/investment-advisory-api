@@ -8,10 +8,12 @@ class CreateAssets < ActiveRecord::Migration[7.0]
       t.integer :quantity
       t.datetime :application_date
       t.datetime :expiration_date
+      t.datetime :discarded_at
       t.belongs_to :client, foreign_key: true
 
       t.timestamps
     end
+    add_index :assets, :discarded_at
   end
 
   def down

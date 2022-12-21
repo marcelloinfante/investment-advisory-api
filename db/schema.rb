@@ -22,10 +22,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_21_002431) do
     t.integer "quantity"
     t.datetime "application_date"
     t.datetime "expiration_date"
+    t.datetime "discarded_at"
     t.bigint "client_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["client_id"], name: "index_assets_on_client_id"
+    t.index ["discarded_at"], name: "index_assets_on_discarded_at"
   end
 
   create_table "clients", force: :cascade do |t|

@@ -483,12 +483,14 @@ RSpec.describe Api::V1::ClientsController, type: :request do
       it "update client" do
         client = Client.first
         serialized_client = ClientSerializer.new(client).sanitized_hash
+        params[:id] = serialized_client[:id]
 
         expect(serialized_client).to eq(params.transform_keys(&:to_s))
       end
 
       it "return updated client" do
         returned_client = JSON.parse(response.body)
+        params[:id] = returned_client["id"]
 
         expect(returned_client).to eq(params.transform_keys(&:to_s))
       end

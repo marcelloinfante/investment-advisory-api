@@ -3,39 +3,43 @@ class Api::V1::AssetsController < ApplicationController
 
   # GET /api/v1/assets
   def index
-    clients = AssetSerializer.new(current_user.clients).sanitized_hash
+    client = current_user.clients.find(asset_params[:client_id])
+    assets = AssetSerializer.new(client.assets).sanitized_hash
 
-    render json: clients
+    render json: assets
   end
 
   # GET /api/v1/assets/:id
   def show
-    client = current_user.clients.find(client_params[:id])
-    client = AssetSerializer.new(client).sanitized_hash
+    client = current_user.clients.find(asset_params[:client_id])
+    asset = client.assets.find(asset_params[:id])
+    asset = AssetSerializer.new(asset).sanitized_hash
 
-    render json: client
+    render json: asset
   end
 
   # POST /api/v1/assets
   def create
-    params = { user: current_user }.merge(client_params)
-    client = Client.new(params)
+    current_user.clients.find(asset_params[:client_id])
 
-    if client.save
-      client = AssetSerializer.new(client).sanitized_hash
-      render status: :created, json: client
+    asset = Asset.new(asset_params)
+
+    if asset.save
+      asset = AssetSerializer.new(asset).sanitized_hash
+      render status: :created, json: asset
     else
-      render status: :bad_request, json: { error: client.errors.messages }
+      render status: :bad_request, json: { error: asset.errors.messages }
     end
   end
 
   # PUT /api/v1/assets/:id
   def update
-    client = current_user.clients.find(client_params[:id])
+    client = current_user.clients.find(asset_params[:client_id])
+    asset = client.assets.find(asset_params[:id])
 
-    if client.update(client_params)
-      client = AssetSerializer.new(client).sanitized_hash
-      render json: client
+    if asset.update(asset_params)
+      asset = AssetSerializer.new(asset).sanitized_hash
+      render json: asset
     else
       render status: :bad_request, json: { error: "Asset couldn't be updated." }
     end
@@ -43,11 +47,12 @@ class Api::V1::AssetsController < ApplicationController
 
   # DELETE /api/v1/assets/:id
   def destroy
-    client = current_user.clients.find(client_params[:id])
+    client = current_user.clients.find(asset_params[:client_id])
+    asset = client.assets.find(asset_params[:id])
 
-    if client.discard
-      client = AssetSerializer.new(client).sanitized_hash
-      render json: client
+    if asset.discard
+      asset = AssetSerializer.new(asset).sanitized_hash
+      render json: asset
     else
       render status: :bad_request, json: { error: "Asset couldn't be deleted." }
     end
@@ -56,7 +61,7 @@ class Api::V1::AssetsController < ApplicationController
   private
 
   def asset_params
-    params.permit(:id, :code, :issuer, :rate_index,
+    params.permit(:id, :client_id, :code, :issuer, :rate_index,
     :entrance_rate, :quantity, :application_date, :expiration_date)
   end
 end
