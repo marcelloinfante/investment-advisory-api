@@ -5,7 +5,7 @@ class CreateClients < ActiveRecord::Migration[7.0]
       t.string :last_name
       t.string :email
       t.datetime :discarded_at
-      t.belongs_to :user
+      t.belongs_to :user, foreign_key: true
 
       t.timestamps
     end

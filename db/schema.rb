@@ -10,9 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_19_213902) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_21_002431) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "assets", force: :cascade do |t|
+    t.string "code"
+    t.string "issuer"
+    t.string "rate_index"
+    t.decimal "entrace_rate"
+    t.integer "quantity"
+    t.datetime "application_date"
+    t.datetime "expiration_date"
+    t.bigint "client_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_assets_on_client_id"
+  end
 
   create_table "clients", force: :cascade do |t|
     t.string "first_name"
@@ -50,4 +64,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_19_213902) do
     t.index ["email"], name: "index_users_on_email"
   end
 
+  add_foreign_key "assets", "clients"
+  add_foreign_key "clients", "users"
+  add_foreign_key "users", "companies"
 end
