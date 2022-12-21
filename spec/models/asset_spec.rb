@@ -12,4 +12,33 @@ RSpec.describe Asset, type: :model do
       it { should validate_presence_of(:expiration_date) }
     end
   end
+
+  # describe "callbacks" do
+  #   context "discard" do
+  #     it "discard all simulations associated with the asset" do
+  #       user = create(:user)
+  #       client = create(:client, user:)
+  #       asset = create(:asset, client:)
+  #       simulation = create(:simulation, asset:)
+
+  #       asset.discard
+  #       not_deleted_simulations = asset.simulation.kept
+
+  #       expect(not_deleted_simulations).to be_empty
+  #     end
+
+  #     it "undiscard all simulations associated with the asset" do
+  #       user = create(:user)
+  #       client = create(:client, user:)
+  #       asset = create(:asset, client:)
+  #       simulation = create(:simulation, asset:)
+
+  #       asset.discard
+  #       asset.undiscard
+  #       deleted_simulations = asset.simulation.discarded
+
+  #       expect(deleted_simulations).to be_empty
+  #     end
+  #   end
+  # end
 end

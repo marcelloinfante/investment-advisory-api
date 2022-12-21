@@ -18,4 +18,29 @@ RSpec.describe User, type: :model do
       it { should validate_uniqueness_of(:email) }
     end
   end
+
+  describe "callbacks" do
+    context "discard" do
+      it "discard all clients associated with the user" do
+        user = create(:user)
+        clients = create_list(:client, 5, user:)
+
+        user.discard
+        not_deleted_clients = user.clients.kept
+
+        expect(not_deleted_clients).to be_empty
+      end
+
+      it "undiscard all clients associated with the user" do
+        user = create(:user)
+        clients = create_list(:client, 5, user:)
+
+        user.discard
+        user.undiscard
+        deleted_clients = user.clients.discarded
+
+        expect(deleted_clients).to be_empty
+      end
+    end
+  end
 end

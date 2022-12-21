@@ -12,4 +12,31 @@ RSpec.describe Client, type: :model do
       it { should validate_uniqueness_of(:email) }
     end
   end
+
+  describe "callbacks" do
+    context "discard" do
+      it "discard all assets associated with the client" do
+        user = create(:user)
+        client = create(:client, user:)
+        assets = create_list(:asset, 5, client:)
+
+        client.discard
+        not_deleted_assets = client.assets.kept
+
+        expect(not_deleted_assets).to be_empty
+      end
+
+      it "undiscard all assets associated with the client" do
+        user = create(:user)
+        client = create(:client, user:)
+        assets = create_list(:asset, 5, client:)
+
+        client.discard
+        client.undiscard
+        deleted_assets = client.assets.discarded
+
+        expect(deleted_assets).to be_empty
+      end
+    end
+  end
 end
