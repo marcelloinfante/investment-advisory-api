@@ -12,4 +12,12 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  after_discard do
+    clients.discard_all
+  end
+
+  after_undiscard do
+    clients.undiscard_all
+  end
 end

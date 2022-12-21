@@ -11,4 +11,12 @@ class Asset < ApplicationRecord
   validates :quantity, presence: true
   validates :application_date, presence: true
   validates :expiration_date, presence: true
+
+  # after_discard do
+  #   simulations.discard_all
+  # end
+
+  # after_undiscard do
+  #   simulations.undiscard_all
+  # end
 end
