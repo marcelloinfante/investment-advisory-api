@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Asset, type: :model do
+  describe "association" do
+    it { should have_many(:simulations) }
+    it { should belong_to(:client) }
+  end
+
   describe "validations" do
     context "presence" do
       it { should validate_presence_of(:code) }
@@ -13,32 +18,32 @@ RSpec.describe Asset, type: :model do
     end
   end
 
-  # describe "callbacks" do
-  #   context "discard" do
-  #     it "discard all simulations associated with the asset" do
-  #       user = create(:user)
-  #       client = create(:client, user:)
-  #       asset = create(:asset, client:)
-  #       simulation = create(:simulation, asset:)
+  describe "callbacks" do
+    context "discard" do
+      it "discard all simulations associated with the asset" do
+        user = create(:user)
+        client = create(:client, user:)
+        asset = create(:asset, client:)
+        simulation = create(:simulation, asset:)
 
-  #       asset.discard
-  #       not_deleted_simulations = asset.simulation.kept
+        asset.discard
+        not_deleted_simulations = asset.simulations.kept
 
-  #       expect(not_deleted_simulations).to be_empty
-  #     end
+        expect(not_deleted_simulations).to be_empty
+      end
 
-  #     it "undiscard all simulations associated with the asset" do
-  #       user = create(:user)
-  #       client = create(:client, user:)
-  #       asset = create(:asset, client:)
-  #       simulation = create(:simulation, asset:)
+      it "undiscard all simulations associated with the asset" do
+        user = create(:user)
+        client = create(:client, user:)
+        asset = create(:asset, client:)
+        simulation = create(:simulation, asset:)
 
-  #       asset.discard
-  #       asset.undiscard
-  #       deleted_simulations = asset.simulation.discarded
+        asset.discard
+        asset.undiscard
+        deleted_simulations = asset.simulations.discarded
 
-  #       expect(deleted_simulations).to be_empty
-  #     end
-  #   end
-  # end
+        expect(deleted_simulations).to be_empty
+      end
+    end
+  end
 end

@@ -1,6 +1,11 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
+  describe "association" do
+    it { should have_many(:clients) }
+    it { should belong_to(:company).optional }
+  end
+
   describe "validations" do
     context "has_secure_password" do
       it { should have_secure_password }

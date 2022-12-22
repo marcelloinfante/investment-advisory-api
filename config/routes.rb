@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       
       resources :clients
       resources :assets
+      resources :simulations
       # @TODO: Add company routes
       # resources :companies
     end

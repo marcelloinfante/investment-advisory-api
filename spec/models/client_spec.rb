@@ -1,6 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Client, type: :model do
+  describe "association" do
+    it { should have_many(:assets) }
+    it { should belong_to(:user) }
+  end
+
   describe "validations" do
     context "presence" do
       it { should validate_presence_of(:first_name) }

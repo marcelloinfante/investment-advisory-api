@@ -5,19 +5,19 @@ RSpec.describe AssetSerializer do
     it "return serialized asset" do
       user = create(:user)
       client = create(:client, user:)
-      assset = create(:asset, client:)
+      asset = create(:asset, client:)
 
-      serialized_asset = AssetSerializer.new(assset).sanitized_hash
+      serialized_asset = AssetSerializer.new(asset).sanitized_hash
 
       expect(serialized_asset).to include({
-        id: assset.id,
-        code: assset.code,
-        issuer: assset.issuer,
-        rate_index: assset.rate_index,
-        entrance_rate: assset.entrance_rate,
-        quantity: assset.quantity,
-        application_date: assset.application_date.to_i,
-        expiration_date: assset.expiration_date.to_i
+        id: asset.id,
+        code: asset.code,
+        issuer: asset.issuer,
+        rate_index: asset.rate_index,
+        entrance_rate: asset.entrance_rate,
+        quantity: asset.quantity,
+        application_date: asset.application_date.to_i,
+        expiration_date: asset.expiration_date.to_i
       })
     end
   end

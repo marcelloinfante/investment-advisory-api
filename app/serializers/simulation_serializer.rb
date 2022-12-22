@@ -1,0 +1,32 @@
+class SimulationSerializer
+  include JSONAPI::Serializer
+  include SerializerHelper
+
+  attribute :agio
+  attribute :is_worth
+  attribute :market_rate
+  attribute :average_cdi
+  attribute :curve_volume
+  attribute :days_in_years
+  attribute :new_asset_code
+  attribute :new_asset_issuer
+  attribute :volume_applied
+  attribute :quotation_date
+  attribute :years_to_expire
+  attribute :agio_percentage
+  attribute :final_variation
+  attribute :remaining_mounths
+  attribute :market_redemption
+  attribute :current_final_value
+  attribute :current_final_value
+  attribute :new_asset_duration
+  attribute :percentage_to_recover
+  attribute :new_asset_minimum_rate
+  attribute :new_asset_maximum_rate
+  attribute :new_asset_suggested_rate
+  attribute :new_asset_indicative_rate
+  attribute :new_asset_expiration_date
+  attribute :year_to_expire_with_new_rate
+  attribute :new_rate_final_value_same_period
+  attribute :final_value_with_new_rate_at_new_period
+end

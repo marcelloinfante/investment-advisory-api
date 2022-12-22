@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe Company, type: :model do
+  describe "association" do
+    it { should have_many(:users) }
+  end
+
   describe "validations" do
     context "presence" do
       it { should validate_presence_of(:name) }
