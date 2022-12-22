@@ -11,6 +11,7 @@ RSpec.describe SimulationSerializer do
       serialized_simulation = SimulationSerializer.new(simulation).sanitized_hash
 
       expect(serialized_simulation).to include({
+        id: simulation.id,
         agio: simulation.agio,
         is_worth: simulation.is_worth,
         market_rate: simulation.market_rate,

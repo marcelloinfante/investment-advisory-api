@@ -2,6 +2,7 @@ class SimulationSerializer
   include JSONAPI::Serializer
   include SerializerHelper
 
+  attribute :id
   attribute :agio
   attribute :is_worth
   attribute :market_rate
