@@ -543,6 +543,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
     context "success scenario" do
       let(:user) { create(:user) }
       let(:client) { create(:client, user:) }
+      let(:asset) { create(:asset, client:) }
 
       before(:each) do
         user_id = user.id
@@ -550,25 +551,26 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
 
         headers = { "Authorization": "Bearer #{token}" }
 
-        params = attributes_for(:asset)
+        params = attributes_for(:simulation)
         params[:client_id] = client.id
+        params[:asset_id] = asset.id
 
-        post "/api/v1/assets", headers:, params:
+        post "/api/v1/simulations", headers:, params:
       end
 
       it "have status 201" do
         expect(response).to have_http_status(:created)
       end
 
-      it "create new asset" do
-        expect(Asset.all).not_to be_empty
+      it "create new simulation" do
+        expect(Simulation.all).not_to be_empty
       end
 
-      it "return new asset" do
-        returned_asset = response.body
-        serialized_asset = AssetSerializer.new(client.assets.first).sanitized_hash
+      it "return new simulation" do
+        returned_simulation = response.body
+        serialized_simulation = SimulationSerializer.new(asset.simulations.first).sanitized_hash
 
-        expect(returned_asset).to eq(serialized_asset.to_json)
+        expect(returned_simulation).to eq(serialized_simulation.to_json)
       end
     end
 

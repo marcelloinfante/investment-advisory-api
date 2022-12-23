@@ -13,10 +13,10 @@ class SimulationSerializer
   attribute :new_asset_issuer
   attribute :volume_applied
   attribute :quotation_date
-  attribute :years_to_expire
+  attribute :new_asset_remaining_years
   attribute :agio_percentage
   attribute :final_variation
-  attribute :remaining_mounths
+  attribute :remaining_years
   attribute :market_redemption
   attribute :current_final_value
   attribute :current_final_value
@@ -27,7 +27,6 @@ class SimulationSerializer
   attribute :new_asset_suggested_rate
   attribute :new_asset_indicative_rate
   attribute :new_asset_expiration_date
-  attribute :year_to_expire_with_new_rate
   attribute :new_rate_final_value_same_period
-  attribute :final_value_with_new_rate_at_new_period
+  attribute :new_rate_final_value_new_period
 end

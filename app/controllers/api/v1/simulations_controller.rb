@@ -26,18 +26,23 @@ class Api::V1::SimulationsController < ApplicationController
   def create
     client = current_user.clients.find(simulation_params[:client_id])
     asset = client.assets.find(simulation_params[:asset_id])
-    
-    params = simulation_params.to_hash
+
+    params = simulation_params.to_hash.transform_keys(&:to_sym)
     params[:asset] = asset
 
-    simulation_attributes = Simulation::CalculateAttributes.call(params)
-    simulation = Simulation.new(simulation_attributes)
+    interector = Simulation::BuildAttributes.call(params:)
 
-    if simulation.save
-      simulation = SimulationSerializer.new(simulation).sanitized_hash
-      render status: :created, json: simulation
+    if interector.success?
+      simulation = Simulation.new(interector.result)
+
+      if simulation.save
+        simulation = SimulationSerializer.new(simulation).sanitized_hash
+        render status: :created, json: simulation
+      else
+        render status: :bad_request, json: { error: simulation.errors.messages }
+      end
     else
-      render status: :bad_request, json: { error: simulation.errors.messages }
+      render status: :bad_request, json: { error: interector.error }
     end
   end
 
@@ -75,8 +80,8 @@ class Api::V1::SimulationsController < ApplicationController
     params.permit(
       :id, :client_id, :asset_id, :new_asset_code, :new_asset_issuer, :new_asset_expiration_date,
       :new_asset_minimum_rate, :new_asset_maximum_rate, :new_asset_duration, :new_asset_indicative_rate,
-      :new_asset_suggested_rate, :quotation_date, :average_cdi, :volume_applied, :curve_volume,
-      :market_redemption, :market_rate, :years_to_expire
+      :new_asset_suggested_rate, :quotation_date, :average_cdi, :volume_applied,
+      :curve_volume, :market_redemption, :market_rate
     )
   end
 end

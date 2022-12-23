@@ -22,10 +22,9 @@ RSpec.describe SimulationSerializer do
         new_asset_issuer: simulation.new_asset_issuer,
         volume_applied: simulation.volume_applied,
         quotation_date: simulation.quotation_date,
-        years_to_expire: simulation.years_to_expire,
         agio_percentage: simulation.agio_percentage,
         final_variation: simulation.final_variation,
-        remaining_mounths: simulation.remaining_mounths,
+        remaining_years: simulation.remaining_years,
         market_redemption: simulation.market_redemption,
         current_final_value: simulation.current_final_value,
         current_final_value: simulation.current_final_value,
@@ -34,11 +33,11 @@ RSpec.describe SimulationSerializer do
         new_asset_minimum_rate: simulation.new_asset_minimum_rate,
         new_asset_maximum_rate: simulation.new_asset_maximum_rate,
         new_asset_suggested_rate: simulation.new_asset_suggested_rate,
+        new_asset_remaining_years: simulation.new_asset_remaining_years,
         new_asset_indicative_rate: simulation.new_asset_indicative_rate,
         new_asset_expiration_date: simulation.new_asset_expiration_date,
-        year_to_expire_with_new_rate: simulation.year_to_expire_with_new_rate,
         new_rate_final_value_same_period: simulation.new_rate_final_value_same_period,
-        final_value_with_new_rate_at_new_period: simulation.final_value_with_new_rate_at_new_period
+        new_rate_final_value_new_period: simulation.new_rate_final_value_new_period
       })
     end
   end
