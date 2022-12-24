@@ -33,12 +33,10 @@ class Api::V1::UsersController < ApplicationController
 
   # DELETE /api/v1/user
   def destroy
-    if current_user.discard
-      user = UserSerializer.new(current_user).sanitized_hash
-      render json: user
-    else
-      render status: :bad_request, json: { error: "User couldn't be deleted." }
-    end
+    current_user.discard!
+
+    user = UserSerializer.new(current_user).sanitized_hash
+    render json: user
   end
 
   # PUT /api/v1/user

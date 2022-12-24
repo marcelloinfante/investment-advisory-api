@@ -50,16 +50,15 @@ class Api::V1::SimulationsController < ApplicationController
 
     serializer_simulation = SimulationSerializer.new(simulation).sanitized_hash
     updated_params = serializer_simulation.merge(simulation_params)
+    updated_params[:asset] = asset
 
     interector = Simulation::BuildAttributes.call(params: updated_params)
 
     if interector.success?
-      if simulation.update(interector.result)
-        simulation = SimulationSerializer.new(simulation).sanitized_hash
-        render json: simulation
-      else
-        render status: :bad_request, json: { error: "Simultation couldn't be updated." }
-      end
+      simulation.update!(interector.result)
+
+      simulation = SimulationSerializer.new(simulation).sanitized_hash
+      render json: simulation
     else
       render status: :bad_request, json: { error: interector.error }
     end
@@ -69,14 +68,12 @@ class Api::V1::SimulationsController < ApplicationController
   def destroy
     client = current_user.clients.find(simulation_params[:client_id])
     asset = client.assets.find(simulation_params[:asset_id])
-    simulation = asset.simulation.find(simulation_params[:id])
+    simulation = asset.simulations.find(simulation_params[:id])
 
-    if simulation.discard
-      simulation = SimulationSerializer.new(simulation).sanitized_hash
-      render json: simulation
-    else
-      render status: :bad_request, json: { error: "Simulation couldn't be deleted." }
-    end
+    simulation.discard!
+
+    simulation = SimulationSerializer.new(simulation).sanitized_hash
+    render json: simulation
   end
 
   private

@@ -45,12 +45,10 @@ class Api::V1::ClientsController < ApplicationController
   def destroy
     client = current_user.clients.find(client_params[:id])
 
-    if client.discard
-      client = ClientSerializer.new(client).sanitized_hash
-      render json: client
-    else
-      render status: :bad_request, json: { error: "Client couldn't be deleted." }
-    end
+    client.discard!
+
+    client = ClientSerializer.new(client).sanitized_hash
+    render json: client
   end
 
   private

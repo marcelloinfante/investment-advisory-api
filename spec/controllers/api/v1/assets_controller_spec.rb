@@ -964,6 +964,12 @@ RSpec.describe Api::V1::AssetsController, type: :request do
         expect(response).to have_http_status(:ok)
       end
 
+      it "discard asset" do
+        asset = Asset.first
+
+        expect(asset).to be_discarded
+      end
+
       it "return deleted asset" do
         returned_asset = JSON.parse(response.body)
         serialized_asset = AssetSerializer.new(asset).sanitized_hash

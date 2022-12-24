@@ -2040,29 +2040,55 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         put "/api/v1/simulations/#{simulation.id}", headers:, params:
       end
 
-      # it "have status 200" do
-      #   expect(response).to have_http_status(:ok)
-      # end
-
-      it "update simulation" do
-        simulation = Simulation.first
-        serialized_simulation = SimulationSerializer.new(simulation).sanitized_hash
-
-        expect(serialized_simulation).to eq(params.transform_keys(&:to_s))
+      it "have status 200" do
+        expect(response).to have_http_status(:ok)
       end
 
-    #   it "return updated asset" do
-    #     returned_asset = JSON.parse(response.body).transform_keys(&:to_sym)
+      # it "update simulation" do
+      #   simulation = Simulation.first
+      #   serialized_simulation = SimulationSerializer.new(simulation).sanitized_hash
+      #   result = Simulation::BuildAttributes.call(params:).result
 
-    #     params[:id] = returned_asset[:id]
-    #     params[:application_date] = params[:application_date].to_i
-    #     params[:expiration_date] = params[:expiration_date].to_i
-    #     params[:entrance_rate] = params[:entrance_rate].to_s
+      #   expect(serialized_simulation).to eq(result)
+      # end
 
-    #     returned_asset[:client_id] = client.id
+      it "return updated asset" do
+        returned_simulation = JSON.parse(response.body).transform_keys(&:to_sym)
+        returned_simulation[:asset] = asset
+        result = Simulation::BuildAttributes.call(params: returned_simulation).result
 
-    #     expect(returned_asset).to eq(params)
-    #   end
+        reference_params = {
+          asset:,
+          id: returned_simulation[:id],
+          agio: result[:agio],
+          is_worth: result[:is_worth],
+          market_rate: result[:market_rate].to_s,
+          average_cdi: result[:average_cdi].to_s,
+          curve_volume: result[:curve_volume],
+          days_in_years: result[:days_in_years],
+          new_asset_code: result[:new_asset_code],
+          new_asset_issuer: result[:new_asset_issuer],
+          volume_applied: result[:volume_applied],
+          quotation_date: returned_simulation[:quotation_date],
+          new_asset_remaining_years: result[:new_asset_remaining_years].to_s,
+          agio_percentage: result[:agio_percentage].to_f.to_s,
+          final_variation: result[:final_variation].to_s,
+          remaining_years: result[:remaining_years].to_s,
+          market_redemption: result[:market_redemption],
+          current_final_value: result[:current_final_value].to_s,
+          new_asset_duration: result[:new_asset_duration],
+          percentage_to_recover: result[:percentage_to_recover].to_f.to_s,
+          new_asset_minimum_rate: result[:new_asset_minimum_rate].to_s,
+          new_asset_maximum_rate: result[:new_asset_maximum_rate].to_s,
+          new_asset_suggested_rate: result[:new_asset_suggested_rate].to_s,
+          new_asset_indicative_rate: result[:new_asset_indicative_rate].to_s,
+          new_asset_expiration_date: returned_simulation[:new_asset_expiration_date].to_s,
+          new_rate_final_value_same_period: result[:new_rate_final_value_same_period].to_s,
+          new_rate_final_value_new_period: result[:new_rate_final_value_new_period].to_s,
+        }
+
+        expect(returned_simulation).to eq(reference_params)
+      end
     end
 
     context "error scenario" do
@@ -2071,14 +2097,15 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
           user = create(:user)
           client = create(:client, user:)
           asset = create(:asset, client:)
-          params = attributes_for(:asset, client_id: 100000)
+          simulation = create(:simulation, asset:)
+          params = attributes_for(:simulation, client_id: 100000)
 
           user_id = user.id
           token = JsonWebToken.encode({ user_id: })
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          put "/api/v1/assets/#{asset.id}", headers:, params:
+          put "/api/v1/simulations/#{simulation.id}", headers:, params:
         end
 
         it "return status 400" do
@@ -2102,7 +2129,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          put "/api/v1/assets/1", headers:
+          put "/api/v1/simulations/1", headers:
         end
 
         it "return status 400" do
@@ -2116,9 +2143,64 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         end
       end
 
+      context "asset_id is not found" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          simulation = create(:simulation, asset:)
+          params = attributes_for(:simulation, client_id: client.id, asset: 100000)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          put "/api/v1/simulations/#{simulation.id}", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = body["error"]
+
+          expect(error_message).to include("Couldn't find Asset with")
+        end
+      end
+
+      context "asset_id is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          simulation = create(:simulation, asset:)
+          params = attributes_for(:simulation, client_id: client.id)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          put "/api/v1/simulations/1", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>"Couldn't find Asset without an ID"})
+        end
+      end
+
       context "raise error if token is not provided" do
         before(:each) do
-          put "/api/v1/assets/1"
+          put "/api/v1/simulations/1"
         end
 
         it "return status 401" do
@@ -2137,7 +2219,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         before(:each) do
           token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNzl9.T-B9ZoVNSUyt7PQk50ldKUm1wI5mP2OSP6urI-8XgV4"
 
-          put "/api/v1/assets/1", headers: { "Authorization": "Bearer #{token}" }
+          put "/api/v1/simulations/1", headers: { "Authorization": "Bearer #{token}" }
         end
 
         it "return status 401" do
@@ -2157,7 +2239,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
           user = create(:user)
           token = JsonWebToken.encode({ user_id: user.id }, Time.now - 1.hour)
 
-          put "/api/v1/assets/1", headers: { "Authorization": "Bearer #{token}" }
+          put "/api/v1/simulations/1", headers: { "Authorization": "Bearer #{token}" }
         end
 
         it "return status 401" do
@@ -2178,7 +2260,254 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
           user.discard
           token = JsonWebToken.encode({ user_id: user.id })
 
-          put "/api/v1/assets/1", headers: { "Authorization": "Bearer #{token}" }
+          put "/api/v1/simulations/1", headers: { "Authorization": "Bearer #{token}" }
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+    end
+  end
+
+  describe "DELETE destroy" do
+    context "success scenario" do
+      let(:user) { create(:user) }
+      let(:client) { create(:client, user:) }
+      let(:asset) { create(:asset, client:) }
+      let(:simulation) { create(:simulation, asset:) }
+
+      before(:each) do
+        user_id = user.id
+        token = JsonWebToken.encode({ user_id: })
+
+        headers = { "Authorization": "Bearer #{token}" }
+
+        delete "/api/v1/simulations/#{simulation.id}?client_id=#{client.id}&asset_id=#{asset.id}", headers:
+      end
+
+      it "have status 200" do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "discard simulation" do
+        simulation = Simulation.first
+
+        expect(simulation).to be_discarded
+      end
+
+      # it "return deleted simulation" do
+      #   returned_simulation = JSON.parse(response.body)
+      #   serialized_simulation = SimulationSerializer.new(simulation).sanitized_hash
+
+      #   result = Simulation::BuildAttributes.call(params: returned_simulation).result
+
+      #   reference_params = {
+      #     asset:,
+      #     id: returned_simulation[:id],
+      #     agio: result[:agio],
+      #     is_worth: result[:is_worth],
+      #     market_rate: result[:market_rate].to_s,
+      #     average_cdi: result[:average_cdi].to_s,
+      #     curve_volume: result[:curve_volume],
+      #     days_in_years: result[:days_in_years],
+      #     new_asset_code: result[:new_asset_code],
+      #     new_asset_issuer: result[:new_asset_issuer],
+      #     volume_applied: result[:volume_applied],
+      #     quotation_date: returned_simulation[:quotation_date],
+      #     new_asset_remaining_years: result[:new_asset_remaining_years].to_s,
+      #     agio_percentage: result[:agio_percentage].to_f.to_s,
+      #     final_variation: result[:final_variation].to_s,
+      #     remaining_years: result[:remaining_years].to_s,
+      #     market_redemption: result[:market_redemption],
+      #     current_final_value: result[:current_final_value].to_s,
+      #     new_asset_duration: result[:new_asset_duration],
+      #     percentage_to_recover: result[:percentage_to_recover].to_f.to_s,
+      #     new_asset_minimum_rate: result[:new_asset_minimum_rate].to_s,
+      #     new_asset_maximum_rate: result[:new_asset_maximum_rate].to_s,
+      #     new_asset_suggested_rate: result[:new_asset_suggested_rate].to_s,
+      #     new_asset_indicative_rate: result[:new_asset_indicative_rate].to_s,
+      #     new_asset_expiration_date: returned_simulation[:new_asset_expiration_date].to_s,
+      #     new_rate_final_value_same_period: result[:new_rate_final_value_same_period].to_s,
+      #     new_rate_final_value_new_period: result[:new_rate_final_value_new_period].to_s,
+      #   }
+
+      #   expect(returned_simulation).to eq(reference_params)
+      # end
+    end
+
+    context "error scenario" do
+      context "client id not found" do
+        before(:each) do
+          user = create(:user)
+          user_id = user.id
+
+          token = JsonWebToken.encode({ user_id: })
+  
+          headers = { "Authorization": "Bearer #{token}" }
+  
+          delete "/api/v1/simulations/1", headers:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body).with_indifferent_access
+          error_message = body[:error]
+
+          expect(error_message).to eq("Couldn't find Client without an ID")
+        end
+      end
+
+      context "client_id is not found" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client)
+          asset = create(:asset, client:)
+          simulation = create(:simulation, asset:)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          delete "/api/v1/simulations/#{simulation.id}&client_id=#{client.id}", headers:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = body["error"]
+
+          expect(error_message).to include("Couldn't find Client with")
+        end
+      end
+
+      context "client_id is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client)
+          asset = create(:asset, client:)
+          simulation = create(:simulation, asset:)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          delete "/api/v1/simulations/#{simulation.id}", headers:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>"Couldn't find Client without an ID"})
+        end
+      end
+
+      context "simulation id not found" do
+        before(:each) do
+          user = create(:user)
+          user_id = user.id
+
+          token = JsonWebToken.encode({ user_id: })
+  
+          headers = { "Authorization": "Bearer #{token}" }
+  
+          delete "/api/v1/simulations/1", headers:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body).with_indifferent_access
+          error_message = body[:error]
+
+          expect(error_message).to eq("Couldn't find Client without an ID")
+        end
+      end
+
+      context "raise error if token is not provided" do
+        before(:each) do
+          delete "/api/v1/simulations/1"
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+
+      context "raise error if token is invalid" do
+        before(:each) do
+          token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNzl9.T-B9ZoVNSUyt7PQk50ldKUm1wI5mP2OSP6urI-8XgV4"
+
+          delete "/api/v1/simulations/1", headers: { "Authorization": "Bearer #{token}" }
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+
+      context "raise error if token is expired" do
+        before(:each) do
+          user = create(:user)
+          token = JsonWebToken.encode({ user_id: user.id }, Time.now - 1.hour)
+
+          delete "/api/v1/simulations/1", headers: { "Authorization": "Bearer #{token}" }
+        end
+
+        it "return status 401" do
+          expect(response).to have_http_status(:unauthorized)
+        end
+
+        it "return error message" do
+          body = JSON.parse(response.body)
+          error_message = { "error" => "User is not logged in/could not be found." }
+
+          expect(body).to eq(error_message)
+        end
+      end
+
+      context "raise error if user is deleted" do
+        before(:each) do
+          user = create(:user)
+          user.discard
+          token = JsonWebToken.encode({ user_id: user.id })
+
+          delete "/api/v1/simulations/1", headers: { "Authorization": "Bearer #{token}" }
         end
 
         it "return status 401" do

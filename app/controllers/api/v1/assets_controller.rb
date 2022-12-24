@@ -50,12 +50,10 @@ class Api::V1::AssetsController < ApplicationController
     client = current_user.clients.find(asset_params[:client_id])
     asset = client.assets.find(asset_params[:id])
 
-    if asset.discard
-      asset = AssetSerializer.new(asset).sanitized_hash
-      render json: asset
-    else
-      render status: :bad_request, json: { error: "Asset couldn't be deleted." }
-    end
+    asset.discard!
+
+    asset = AssetSerializer.new(asset).sanitized_hash
+    render json: asset
   end
 
   private
