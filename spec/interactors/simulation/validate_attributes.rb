@@ -49,7 +49,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ asset: "Can't be blank" })
+          expect(interactor.error).to eq({ asset: "must have type Asset, not NilClass" })
         end
       end
 
@@ -63,7 +63,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ average_cdi: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ average_cdi: "must have type String or Float, not NilClass" })
         end
       end
 
@@ -77,7 +77,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ market_rate: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ market_rate: "must have type String or Float, not NilClass" })
         end
       end
       
@@ -91,7 +91,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ curve_volume: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ curve_volume: "must have type String or Integer, not NilClass" })
         end
       end
       
@@ -105,7 +105,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ quotation_date: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ quotation_date: "must have type String or DateTime or ActiveSupport::TimeWithZone, not NilClass" })
         end
       end
       
@@ -133,7 +133,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ volume_applied: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ volume_applied: "must have type String or Integer, not NilClass" })
         end
       end
       
@@ -161,7 +161,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ market_redemption: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ market_redemption: "must have type String or Integer, not NilClass" })
         end
       end
       
@@ -175,7 +175,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ new_asset_duration: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ new_asset_duration: "must have type String or Integer, not NilClass" })
         end
       end
       
@@ -189,7 +189,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ new_asset_minimum_rate: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ new_asset_minimum_rate: "must have type String or Float, not NilClass" })
         end
       end
 
@@ -203,7 +203,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ new_asset_maximum_rate: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ new_asset_maximum_rate: "must have type String or Float, not NilClass" })
         end
       end
 
@@ -217,7 +217,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ new_asset_suggested_rate: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ new_asset_suggested_rate: "must have type String or Float, not NilClass" })
         end
       end
 
@@ -231,7 +231,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ new_asset_indicative_rate: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ new_asset_indicative_rate: "must have type String or Float, not NilClass" })
         end
       end
 
@@ -245,7 +245,7 @@ RSpec.describe Simulation::FormatAttributes do
         end
 
         it "return message error" do
-          expect(interactor.error).to eq({ new_asset_expiration_date: "must have type String, not NilClass" })
+          expect(interactor.error).to eq({ new_asset_expiration_date: "must have type String or DateTime or ActiveSupport::TimeWithZone, not NilClass" })
         end
       end
     end

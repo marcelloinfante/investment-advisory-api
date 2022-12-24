@@ -33,14 +33,10 @@ class Api::V1::SimulationsController < ApplicationController
     interector = Simulation::BuildAttributes.call(params:)
 
     if interector.success?
-      simulation = Simulation.new(interector.result)
+      simulation = Simulation.create!(interector.result)
 
-      if simulation.save
-        simulation = SimulationSerializer.new(simulation).sanitized_hash
-        render status: :created, json: simulation
-      else
-        render status: :bad_request, json: { error: simulation.errors.messages }
-      end
+      simulation = SimulationSerializer.new(simulation).sanitized_hash
+      render status: :created, json: simulation
     else
       render status: :bad_request, json: { error: interector.error }
     end
@@ -52,13 +48,20 @@ class Api::V1::SimulationsController < ApplicationController
     asset = client.assets.find(simulation_params[:asset_id])
     simulation = asset.simulations.find(simulation_params[:id])
 
-    simulation = SimulationSerializer.new(simulation).sanitized_hash
+    serializer_simulation = SimulationSerializer.new(simulation).sanitized_hash
+    updated_params = serializer_simulation.merge(simulation_params)
 
-    if simulation.update(simulation_params)
-      simulation = SimulationSerializer.new(simulation).sanitized_hash
-      render json: simulation
+    interector = Simulation::BuildAttributes.call(params: updated_params)
+
+    if interector.success?
+      if simulation.update(interector.result)
+        simulation = SimulationSerializer.new(simulation).sanitized_hash
+        render json: simulation
+      else
+        render status: :bad_request, json: { error: "Simultation couldn't be updated." }
+      end
     else
-      render status: :bad_request, json: { error: "Simultation couldn't be updated." }
+      render status: :bad_request, json: { error: interector.error }
     end
   end
 
