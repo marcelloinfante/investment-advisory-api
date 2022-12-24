@@ -572,6 +572,12 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
 
         expect(returned_simulation).to eq(serialized_simulation.to_json)
       end
+
+      it "have association with asset" do
+        simulation_asset = Simulation.first.asset
+
+        expect(simulation_asset).to be_present
+      end
     end
 
     context "error scenario" do
