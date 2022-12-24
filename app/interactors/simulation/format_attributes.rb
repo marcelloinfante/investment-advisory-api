@@ -3,7 +3,7 @@ class Simulation::FormatAttributes
 
   def call
     context.formatted_params = {
-      asset_id: context.params[:asset].id,
+      asset: context.params[:asset],
       average_cdi: context.params[:average_cdi].to_f,
       market_rate: context.params[:market_rate].to_f,
       curve_volume: context.params[:curve_volume].to_i,
@@ -21,6 +21,5 @@ class Simulation::FormatAttributes
       new_asset_expiration_date: Date.parse(context.params[:new_asset_expiration_date]),
       current_asset_expiration_date: context.params[:asset].expiration_date.to_datetime
     }
-    context.params
   end
 end

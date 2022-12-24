@@ -50,7 +50,9 @@ class Api::V1::SimulationsController < ApplicationController
   def update
     client = current_user.clients.find(simulation_params[:client_id])
     asset = client.assets.find(simulation_params[:asset_id])
-    simulation = asset.simulation.find(simulation_params[:id])
+    simulation = asset.simulations.find(simulation_params[:id])
+
+    simulation = SimulationSerializer.new(simulation).sanitized_hash
 
     if simulation.update(simulation_params)
       simulation = SimulationSerializer.new(simulation).sanitized_hash

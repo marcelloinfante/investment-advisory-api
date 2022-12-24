@@ -6,7 +6,7 @@ class Simulation::ValidateAttributes
 
     params_reference.each do |value|
       unless context.params[value].class == String
-        context.error[value] = "Must to have type String, not #{context.params[value].class}"
+        context.error[value] = "must have type String, not #{context.params[value].class}"
       end
     end
 

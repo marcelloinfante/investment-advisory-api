@@ -15,7 +15,6 @@ class Simulation::CalculateAttributes
       new_asset_remaining_years:,
       new_rate_final_value_new_period:,
       new_rate_final_value_same_period:,
-      asset_id: context.formatted_params[:asset_id],
       average_cdi: context.formatted_params[:average_cdi],
       market_rate: context.formatted_params[:market_rate],
       curve_volume: context.formatted_params[:curve_volume],

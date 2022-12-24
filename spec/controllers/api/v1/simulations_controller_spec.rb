@@ -578,7 +578,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
       context "client_id is not found" do
         before(:each) do
           user = create(:user)
-          params = attributes_for(:asset)
+          params = attributes_for(:simulation)
           params[:client_id] = 1
 
           user_id = user.id
@@ -586,7 +586,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          post "/api/v1/assets", headers:, params:
+          post "/api/v1/simulations", headers:, params:
         end
 
         it "return status 400" do
@@ -604,14 +604,14 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
       context "client_id is not provided" do
         before(:each) do
           user = create(:user)
-          params = attributes_for(:asset)
+          params = attributes_for(:simulation)
 
           user_id = user.id
           token = JsonWebToken.encode({ user_id: })
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          post "/api/v1/assets", headers:, params:
+          post "/api/v1/simulations", headers:, params:
         end
 
         it "return status 400" do
@@ -625,21 +625,19 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         end
       end
 
-      context "code is not provided" do
+      context "asset_id is not found" do
         before(:each) do
           user = create(:user)
           client = create(:client, user:)
-          params = attributes_for(:asset)
-          params[:client_id] = client.id
-
-          params.delete(:code)
+          params = attributes_for(:simulation, client_id: client.id)
+          params[:asset_id] = 1
 
           user_id = user.id
           token = JsonWebToken.encode({ user_id: })
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          post "/api/v1/assets", headers:, params:
+          post "/api/v1/simulations", headers:, params:
         end
 
         it "return status 400" do
@@ -647,27 +645,25 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         end
 
         it "return error message" do
-          returned_client = JSON.parse(response.body)
+          body = JSON.parse(response.body)
+          error_message = body["error"]
 
-          expect(returned_client).to eq({"error"=>{"code"=>["can't be blank"]}})
+          expect(error_message).to include("Couldn't find Asset with")
         end
       end
 
-      context "issuer is not provided" do
+      context "asset_id is not provided" do
         before(:each) do
           user = create(:user)
           client = create(:client, user:)
-          params = attributes_for(:asset)
-          params[:client_id] = client.id
-
-          params.delete(:issuer)
+          params = attributes_for(:simulation, client_id: client.id)
 
           user_id = user.id
           token = JsonWebToken.encode({ user_id: })
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          post "/api/v1/assets", headers:, params:
+          post "/api/v1/simulations", headers:, params:
         end
 
         it "return status 400" do
@@ -677,25 +673,27 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"issuer"=>["can't be blank"]}})
+          expect(returned_client).to eq({"error"=>"Couldn't find Asset without an ID"})
         end
       end
 
-      context "rate_index is not provided" do
+      context "average_cdi is not provided" do
         before(:each) do
           user = create(:user)
           client = create(:client, user:)
-          params = attributes_for(:asset)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
           params[:client_id] = client.id
+          params[:asset_id] = asset.id
 
-          params.delete(:rate_index)
+          params.delete(:average_cdi)
 
           user_id = user.id
           token = JsonWebToken.encode({ user_id: })
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          post "/api/v1/assets", headers:, params:
+          post "/api/v1/simulations", headers:, params:
         end
 
         it "return status 400" do
@@ -705,25 +703,27 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"rate_index"=>["can't be blank"]}})
+          expect(returned_client).to eq({"error"=>{"average_cdi"=>"must have type String, not NilClass"}})
         end
       end
 
-      context "entrance_rate is not provided" do
+      context "market_rate is not provided" do
         before(:each) do
           user = create(:user)
           client = create(:client, user:)
-          params = attributes_for(:asset)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
           params[:client_id] = client.id
+          params[:asset_id] = asset.id
 
-          params.delete(:entrance_rate)
+          params.delete(:market_rate)
 
           user_id = user.id
           token = JsonWebToken.encode({ user_id: })
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          post "/api/v1/assets", headers:, params:
+          post "/api/v1/simulations", headers:, params:
         end
 
         it "return status 400" do
@@ -733,25 +733,27 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"entrance_rate"=>["can't be blank"]}})
+          expect(returned_client).to eq({"error"=>{"market_rate"=>"must have type String, not NilClass"}})
         end
       end
 
-      context "quantity is not provided" do
+      context "curve_volume is not provided" do
         before(:each) do
           user = create(:user)
           client = create(:client, user:)
-          params = attributes_for(:asset)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
           params[:client_id] = client.id
+          params[:asset_id] = asset.id
 
-          params.delete(:quantity)
+          params.delete(:curve_volume)
 
           user_id = user.id
           token = JsonWebToken.encode({ user_id: })
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          post "/api/v1/assets", headers:, params:
+          post "/api/v1/simulations", headers:, params:
         end
 
         it "return status 400" do
@@ -761,25 +763,27 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"quantity"=>["can't be blank"]}})
+          expect(returned_client).to eq({"error"=>{"curve_volume"=>"must have type String, not NilClass"}})
         end
       end
 
-      context "application_date is not provided" do
+      context "quotation_date is not provided" do
         before(:each) do
           user = create(:user)
           client = create(:client, user:)
-          params = attributes_for(:asset)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
           params[:client_id] = client.id
+          params[:asset_id] = asset.id
 
-          params.delete(:application_date)
+          params.delete(:quotation_date)
 
           user_id = user.id
           token = JsonWebToken.encode({ user_id: })
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          post "/api/v1/assets", headers:, params:
+          post "/api/v1/simulations", headers:, params:
         end
 
         it "return status 400" do
@@ -789,25 +793,27 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"application_date"=>["can't be blank"]}})
+          expect(returned_client).to eq({"error"=>{"quotation_date"=>"must have type String, not NilClass"}})
         end
       end
 
-      context "expiration_date is not provided" do
+      context "new_asset_code is not provided" do
         before(:each) do
           user = create(:user)
           client = create(:client, user:)
-          params = attributes_for(:asset)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
           params[:client_id] = client.id
+          params[:asset_id] = asset.id
 
-          params.delete(:expiration_date)
+          params.delete(:new_asset_code)
 
           user_id = user.id
           token = JsonWebToken.encode({ user_id: })
 
           headers = { "Authorization": "Bearer #{token}" }
 
-          post "/api/v1/assets", headers:, params:
+          post "/api/v1/simulations", headers:, params:
         end
 
         it "return status 400" do
@@ -817,13 +823,1125 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"expiration_date"=>["can't be blank"]}})
+          expect(returned_client).to eq({"error"=>{"new_asset_code"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "volume_applied is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:volume_applied)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"volume_applied"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_issuer is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_issuer)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_issuer"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "market_redemption is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:market_redemption)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"market_redemption"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_duration is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_duration)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_duration"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_minimum_rate is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_minimum_rate)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_minimum_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_maximum_rate is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_maximum_rate)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_maximum_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_suggested_rate is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_suggested_rate)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_suggested_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_indicative_rate is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_indicative_rate)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_indicative_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_expiration_date is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_expiration_date)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_expiration_date"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      
+
+            context "average_cdi is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:average_cdi)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"average_cdi"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "market_rate is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:market_rate)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"market_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "curve_volume is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:curve_volume)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"curve_volume"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "quotation_date is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:quotation_date)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"quotation_date"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_code is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_code)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_code"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "volume_applied is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:volume_applied)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"volume_applied"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_issuer is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_issuer)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_issuer"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "market_redemption is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:market_redemption)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"market_redemption"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_duration is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_duration)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_duration"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_minimum_rate is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_minimum_rate)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_minimum_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_maximum_rate is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_maximum_rate)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_maximum_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_suggested_rate is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_suggested_rate)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_suggested_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_indicative_rate is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_indicative_rate)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_indicative_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_expiration_date is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params.delete(:new_asset_expiration_date)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_expiration_date"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "average_cdi is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:average_cdi] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"average_cdi"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "market_rate is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:market_rate] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"market_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "curve_volume is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:curve_volume] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"curve_volume"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "quotation_date is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:quotation_date] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"quotation_date"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_code is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:new_asset_code] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_code"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "volume_applied is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:volume_applied] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"volume_applied"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_issuer is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:new_asset_issuer] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_issuer"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "market_redemption is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:market_redemption] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"market_redemption"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_duration is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:new_asset_duration] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_duration"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_minimum_rate is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:new_asset_minimum_rate] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_minimum_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_maximum_rate is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:new_asset_maximum_rate] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_maximum_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_suggested_rate is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:new_asset_suggested_rate] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_suggested_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_indicative_rate is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:new_asset_indicative_rate] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_indicative_rate"=>"must have type String, not NilClass"}})
+        end
+      end
+
+      context "new_asset_expiration_date is nil" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          asset = create(:asset, client:)
+          params = attributes_for(:simulation)
+          params[:client_id] = client.id
+          params[:asset_id] = asset.id
+
+          params[:new_asset_expiration_date] = nil
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/simulations", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"new_asset_expiration_date"=>"must have type String, not NilClass"}})
         end
       end
 
       context "raise error if token is not provided" do
         before(:each) do
-          post "/api/v1/assets"
+          post "/api/v1/simulations"
         end
 
         it "return status 401" do
@@ -842,7 +1960,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         before(:each) do
           token = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyNzl9.T-B9ZoVNSUyt7PQk50ldKUm1wI5mP2OSP6urI-8XgV4"
 
-          post "/api/v1/assets", headers: { "Authorization": "Bearer #{token}" }
+          post "/api/v1/simulations", headers: { "Authorization": "Bearer #{token}" }
         end
 
         it "return status 401" do
@@ -862,7 +1980,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
           user = create(:user)
           token = JsonWebToken.encode({ user_id: user.id }, Time.now - 1.hour)
 
-          post "/api/v1/assets", headers: { "Authorization": "Bearer #{token}" }
+          post "/api/v1/simulations", headers: { "Authorization": "Bearer #{token}" }
         end
 
         it "return status 401" do
@@ -883,7 +2001,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
           user.discard
           token = JsonWebToken.encode({ user_id: user.id })
 
-          post "/api/v1/assets", headers: { "Authorization": "Bearer #{token}" }
+          post "/api/v1/simulations", headers: { "Authorization": "Bearer #{token}" }
         end
 
         it "return status 401" do
