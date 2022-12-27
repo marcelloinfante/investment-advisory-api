@@ -631,6 +631,34 @@ RSpec.describe Api::V1::AssetsController, type: :request do
         end
       end
 
+      context "volume_applied is not provided" do
+        before(:each) do
+          user = create(:user)
+          client = create(:client, user:)
+          params = attributes_for(:asset)
+          params[:client_id] = client.id
+
+          params.delete(:volume_applied)
+
+          user_id = user.id
+          token = JsonWebToken.encode({ user_id: })
+
+          headers = { "Authorization": "Bearer #{token}" }
+
+          post "/api/v1/assets", headers:, params:
+        end
+
+        it "return status 400" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "return error message" do
+          returned_client = JSON.parse(response.body)
+
+          expect(returned_client).to eq({"error"=>{"volume_applied"=>["can't be blank"]}})
+        end
+      end
+
       context "application_date is not provided" do
         before(:each) do
           user = create(:user)
@@ -808,6 +836,7 @@ RSpec.describe Api::V1::AssetsController, type: :request do
         params[:application_date] = params[:application_date].to_i
         params[:expiration_date] = params[:expiration_date].to_i
         params[:entrance_rate] = params[:entrance_rate].to_s
+        params[:volume_applied] = params[:volume_applied].to_s
 
         returned_asset[:client_id] = client.id
 
@@ -974,6 +1003,7 @@ RSpec.describe Api::V1::AssetsController, type: :request do
         returned_asset = JSON.parse(response.body)
         serialized_asset = AssetSerializer.new(asset).sanitized_hash
         serialized_asset[:entrance_rate] = serialized_asset[:entrance_rate].to_s
+        serialized_asset[:volume_applied] = serialized_asset[:volume_applied].to_s
 
         expect(returned_asset).to eq(serialized_asset.transform_keys(&:to_s))
       end

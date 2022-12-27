@@ -13,11 +13,12 @@ RSpec.describe AssetSerializer do
         id: asset.id,
         code: asset.code,
         issuer: asset.issuer,
+        quantity: asset.quantity,
         rate_index: asset.rate_index,
         entrance_rate: asset.entrance_rate,
-        quantity: asset.quantity,
-        application_date: asset.application_date.to_i,
-        expiration_date: asset.expiration_date.to_i
+        volume_applied: asset.volume_applied,
+        expiration_date: asset.expiration_date.to_i,
+        application_date: asset.application_date.to_i
       })
     end
   end

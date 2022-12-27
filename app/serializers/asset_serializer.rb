@@ -2,7 +2,7 @@ class AssetSerializer
   include JSONAPI::Serializer
   include SerializerHelper
 
-  attributes :id, :code, :issuer, :rate_index, :entrance_rate, :quantity
+  attributes :id, :code, :issuer, :rate_index, :entrance_rate, :quantity, :volume_applied
 
   attribute :application_date do |asset|
     asset[:application_date].to_i

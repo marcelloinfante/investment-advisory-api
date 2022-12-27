@@ -9,9 +9,11 @@ RSpec.describe ClientSerializer do
 
       expect(serialized_client).to include({
         id: client.id,
-        first_name: client.first_name,
+        email: client.email,
         last_name: client.last_name,
-        email: client.email
+        first_name: client.first_name,
+        number_of_assets: client.number_of_assets,
+        total_amount_in_custody: client.total_amount_in_custody
       })
     end
   end

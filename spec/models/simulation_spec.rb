@@ -10,7 +10,6 @@ RSpec.describe Simulation, type: :model do
       it { should validate_presence_of(:days_in_years) }
       it { should validate_presence_of(:new_asset_code) }
       it { should validate_presence_of(:new_asset_issuer) }
-      it { should validate_presence_of(:volume_applied) }
       it { should validate_presence_of(:quotation_date) }
       it { should validate_presence_of(:new_asset_remaining_years) }
       it { should validate_presence_of(:agio_percentage) }

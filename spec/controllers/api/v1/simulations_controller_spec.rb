@@ -769,7 +769,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"curve_volume"=>"must have type String or Integer, not NilClass"}})
+          expect(returned_client).to eq({"error"=>{"curve_volume"=>"must have type String or Float, not NilClass"}})
         end
       end
 
@@ -833,36 +833,6 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         end
       end
 
-      context "volume_applied is not provided" do
-        before(:each) do
-          user = create(:user)
-          client = create(:client, user:)
-          asset = create(:asset, client:)
-          params = attributes_for(:simulation)
-          params[:client_id] = client.id
-          params[:asset_id] = asset.id
-
-          params.delete(:volume_applied)
-
-          user_id = user.id
-          token = JsonWebToken.encode({ user_id: })
-
-          headers = { "Authorization": "Bearer #{token}" }
-
-          post "/api/v1/simulations", headers:, params:
-        end
-
-        it "return status 400" do
-          expect(response).to have_http_status(:bad_request)
-        end
-
-        it "return error message" do
-          returned_client = JSON.parse(response.body)
-
-          expect(returned_client).to eq({"error"=>{"volume_applied"=>"must have type String or Integer, not NilClass"}})
-        end
-      end
-
       context "new_asset_issuer is not provided" do
         before(:each) do
           user = create(:user)
@@ -919,7 +889,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"market_redemption"=>"must have type String or Integer, not NilClass"}})
+          expect(returned_client).to eq({"error"=>{"market_redemption"=>"must have type String or Float, not NilClass"}})
         end
       end
 
@@ -949,7 +919,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"new_asset_duration"=>"must have type String or Integer, not NilClass"}})
+          expect(returned_client).to eq({"error"=>{"new_asset_duration"=>"must have type String or Float, not NilClass"}})
         end
       end
 
@@ -1189,7 +1159,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"curve_volume"=>"must have type String or Integer, not NilClass"}})
+          expect(returned_client).to eq({"error"=>{"curve_volume"=>"must have type String or Float, not NilClass"}})
         end
       end
 
@@ -1253,36 +1223,6 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         end
       end
 
-      context "volume_applied is not provided" do
-        before(:each) do
-          user = create(:user)
-          client = create(:client, user:)
-          asset = create(:asset, client:)
-          params = attributes_for(:simulation)
-          params[:client_id] = client.id
-          params[:asset_id] = asset.id
-
-          params.delete(:volume_applied)
-
-          user_id = user.id
-          token = JsonWebToken.encode({ user_id: })
-
-          headers = { "Authorization": "Bearer #{token}" }
-
-          post "/api/v1/simulations", headers:, params:
-        end
-
-        it "return status 400" do
-          expect(response).to have_http_status(:bad_request)
-        end
-
-        it "return error message" do
-          returned_client = JSON.parse(response.body)
-
-          expect(returned_client).to eq({"error"=>{"volume_applied"=>"must have type String or Integer, not NilClass"}})
-        end
-      end
-
       context "new_asset_issuer is not provided" do
         before(:each) do
           user = create(:user)
@@ -1339,7 +1279,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"market_redemption"=>"must have type String or Integer, not NilClass"}})
+          expect(returned_client).to eq({"error"=>{"market_redemption"=>"must have type String or Float, not NilClass"}})
         end
       end
 
@@ -1369,7 +1309,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"new_asset_duration"=>"must have type String or Integer, not NilClass"}})
+          expect(returned_client).to eq({"error"=>{"new_asset_duration"=>"must have type String or Float, not NilClass"}})
         end
       end
 
@@ -1609,7 +1549,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"curve_volume"=>"must have type String or Integer, not NilClass"}})
+          expect(returned_client).to eq({"error"=>{"curve_volume"=>"must have type String or Float, not NilClass"}})
         end
       end
 
@@ -1673,36 +1613,6 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         end
       end
 
-      context "volume_applied is nil" do
-        before(:each) do
-          user = create(:user)
-          client = create(:client, user:)
-          asset = create(:asset, client:)
-          params = attributes_for(:simulation)
-          params[:client_id] = client.id
-          params[:asset_id] = asset.id
-
-          params[:volume_applied] = nil
-
-          user_id = user.id
-          token = JsonWebToken.encode({ user_id: })
-
-          headers = { "Authorization": "Bearer #{token}" }
-
-          post "/api/v1/simulations", headers:, params:
-        end
-
-        it "return status 400" do
-          expect(response).to have_http_status(:bad_request)
-        end
-
-        it "return error message" do
-          returned_client = JSON.parse(response.body)
-
-          expect(returned_client).to eq({"error"=>{"volume_applied"=>"must have type String or Integer, not NilClass"}})
-        end
-      end
-
       context "new_asset_issuer is nil" do
         before(:each) do
           user = create(:user)
@@ -1759,7 +1669,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"market_redemption"=>"must have type String or Integer, not NilClass"}})
+          expect(returned_client).to eq({"error"=>{"market_redemption"=>"must have type String or Float, not NilClass"}})
         end
       end
 
@@ -1789,7 +1699,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         it "return error message" do
           returned_client = JSON.parse(response.body)
 
-          expect(returned_client).to eq({"error"=>{"new_asset_duration"=>"must have type String or Integer, not NilClass"}})
+          expect(returned_client).to eq({"error"=>{"new_asset_duration"=>"must have type String or Float, not NilClass"}})
         end
       end
 
@@ -2060,23 +1970,22 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
         reference_params = {
           asset:,
           id: returned_simulation[:id],
-          agio: result[:agio],
+          agio: result[:agio].to_s,
           is_worth: result[:is_worth],
           market_rate: result[:market_rate].to_s,
           average_cdi: result[:average_cdi].to_s,
-          curve_volume: result[:curve_volume],
+          curve_volume: result[:curve_volume].to_s,
           days_in_years: result[:days_in_years],
           new_asset_code: result[:new_asset_code],
           new_asset_issuer: result[:new_asset_issuer],
-          volume_applied: result[:volume_applied],
           quotation_date: returned_simulation[:quotation_date],
           new_asset_remaining_years: result[:new_asset_remaining_years].to_s,
           agio_percentage: result[:agio_percentage].to_f.to_s,
           final_variation: result[:final_variation].to_s,
           remaining_years: result[:remaining_years].to_s,
-          market_redemption: result[:market_redemption],
+          market_redemption: result[:market_redemption].to_s,
           current_final_value: result[:current_final_value].to_s,
-          new_asset_duration: result[:new_asset_duration],
+          new_asset_duration: result[:new_asset_duration].to_s,
           percentage_to_recover: result[:percentage_to_recover].to_f.to_s,
           new_asset_minimum_rate: result[:new_asset_minimum_rate].to_s,
           new_asset_maximum_rate: result[:new_asset_maximum_rate].to_s,

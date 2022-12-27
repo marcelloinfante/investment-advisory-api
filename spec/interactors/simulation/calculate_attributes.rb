@@ -17,7 +17,7 @@ RSpec.describe Simulation::CalculateAttributes do
         new_asset_code: params[:new_asset_code],
         new_asset_issuer: params[:new_asset_issuer],
         entrance_rate: asset.entrance_rate,
-        volume_applied: params[:volume_applied],
+        volume_applied: asset.volume_applied,
         market_redemption: params[:market_redemption],
         quotation_date: params[:quotation_date].to_datetime,
         new_asset_duration: params[:new_asset_duration],

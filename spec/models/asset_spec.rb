@@ -10,11 +10,12 @@ RSpec.describe Asset, type: :model do
     context "presence" do
       it { should validate_presence_of(:code) }
       it { should validate_presence_of(:issuer) }
+      it { should validate_presence_of(:quantity) }      
       it { should validate_presence_of(:rate_index) }
       it { should validate_presence_of(:entrance_rate) }
-      it { should validate_presence_of(:quantity) }
-      it { should validate_presence_of(:application_date) }
+      it { should validate_presence_of(:volume_applied) }
       it { should validate_presence_of(:expiration_date) }
+      it { should validate_presence_of(:application_date) }
     end
   end
 

@@ -82,8 +82,7 @@ class Api::V1::SimulationsController < ApplicationController
     params.permit(
       :id, :client_id, :asset_id, :new_asset_code, :new_asset_issuer, :new_asset_expiration_date,
       :new_asset_minimum_rate, :new_asset_maximum_rate, :new_asset_duration, :new_asset_indicative_rate,
-      :new_asset_suggested_rate, :quotation_date, :average_cdi, :volume_applied,
-      :curve_volume, :market_redemption, :market_rate
+      :new_asset_suggested_rate, :quotation_date, :average_cdi, :curve_volume, :market_redemption, :market_rate
     )
   end
 end

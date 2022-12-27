@@ -11,7 +11,6 @@ class SimulationSerializer
   attribute :days_in_years
   attribute :new_asset_code
   attribute :new_asset_issuer
-  attribute :volume_applied
   attribute :quotation_date
   attribute :new_asset_remaining_years
   attribute :agio_percentage

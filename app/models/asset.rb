@@ -9,6 +9,7 @@ class Asset < ApplicationRecord
   validates :rate_index, presence: true
   validates :entrance_rate, presence: true
   validates :quantity, presence: true
+  validates :volume_applied, presence: true
   validates :application_date, presence: true
   validates :expiration_date, presence: true
 

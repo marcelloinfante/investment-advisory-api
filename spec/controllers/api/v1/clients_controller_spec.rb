@@ -483,7 +483,11 @@ RSpec.describe Api::V1::ClientsController, type: :request do
       it "update client" do
         client = Client.first
         serialized_client = ClientSerializer.new(client).sanitized_hash
+
         params[:id] = serialized_client[:id]
+
+        serialized_client.delete(:number_of_assets)
+        serialized_client.delete(:total_amount_in_custody)
 
         expect(serialized_client).to eq(params.transform_keys(&:to_s))
       end
@@ -491,6 +495,9 @@ RSpec.describe Api::V1::ClientsController, type: :request do
       it "return updated client" do
         returned_client = JSON.parse(response.body)
         params[:id] = returned_client["id"]
+
+        returned_client.delete("number_of_assets")
+        returned_client.delete("total_amount_in_custody")
 
         expect(returned_client).to eq(params.transform_keys(&:to_s))
       end

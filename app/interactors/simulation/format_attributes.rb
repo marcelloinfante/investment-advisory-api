@@ -38,7 +38,7 @@ class Simulation::FormatAttributes
   end
 
   def curve_volume
-    context.params[:curve_volume].to_i
+    context.params[:curve_volume].to_f
   end
 
   def entrance_rate
@@ -54,7 +54,7 @@ class Simulation::FormatAttributes
   end
 
   def volume_applied
-    context.params[:volume_applied].to_i
+    context.params[:asset].volume_applied.to_f
   end
 
   def new_asset_issuer
@@ -62,11 +62,11 @@ class Simulation::FormatAttributes
   end
 
   def market_redemption
-    context.params[:market_redemption].to_i
+    context.params[:market_redemption].to_f
   end
 
   def new_asset_duration
-    context.params[:new_asset_duration].to_i
+    context.params[:new_asset_duration].to_f
   end
 
   def new_asset_minimum_rate

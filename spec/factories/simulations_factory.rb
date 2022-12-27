@@ -4,13 +4,12 @@ FactoryBot.define do
     quotation_date { Time.now }
     new_asset_code { Faker::Code.asin }
     new_asset_issuer { Faker::Company.name }
-    agio { Faker::Number.number(digits: 2) }
+    agio {  Faker::Number.decimal(l_digits: 2, r_digits: 2) }
     new_asset_expiration_date { Time.now + 1.hour }
-    curve_volume { Faker::Number.number(digits: 2) }
+    curve_volume {  Faker::Number.decimal(l_digits: 2, r_digits: 2) }
     days_in_years { Faker::Number.number(digits: 2) }
-    volume_applied { Faker::Number.number(digits: 2) }
-    market_redemption { Faker::Number.number(digits: 2) }
-    new_asset_duration { Faker::Number.number(digits: 2) }
+    market_redemption {  Faker::Number.decimal(l_digits: 2, r_digits: 2) }
+    new_asset_duration {  Faker::Number.decimal(l_digits: 2, r_digits: 2) }
     market_rate { Faker::Number.decimal(l_digits: 2, r_digits: 2) }
     average_cdi { Faker::Number.decimal(l_digits: 2, r_digits: 2) }
     new_asset_remaining_years{ Faker::Number.decimal(l_digits: 2, r_digits: 2) }

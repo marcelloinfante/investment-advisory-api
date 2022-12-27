@@ -16,7 +16,6 @@ RSpec.describe Simulation::FormatAttributes do
         curve_volume: simulation[:curve_volume].to_s,
         quotation_date: simulation[:quotation_date].to_s,
         new_asset_code: simulation[:new_asset_code],
-        volume_applied: simulation[:volume_applied].to_s,
         new_asset_issuer: simulation[:new_asset_issuer],
         market_redemption: simulation[:market_redemption].to_s,
         new_asset_duration: simulation[:new_asset_duration].to_s,
@@ -120,20 +119,6 @@ RSpec.describe Simulation::FormatAttributes do
 
         it "return message error" do
           expect(interactor.error).to eq({ new_asset_code: "must have type String, not NilClass" })
-        end
-      end
-      
-      context "volume_applied not provided" do
-        before(:each) do
-          params.delete(:volume_applied)
-        end
-
-        it "interactor fail" do
-          expect(interactor).to be_failure
-        end
-
-        it "return message error" do
-          expect(interactor.error).to eq({ volume_applied: "must have type String or Integer, not NilClass" })
         end
       end
       

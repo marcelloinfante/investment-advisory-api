@@ -20,7 +20,6 @@ RSpec.describe SimulationSerializer do
         days_in_years: simulation.days_in_years,
         new_asset_code: simulation.new_asset_code,
         new_asset_issuer: simulation.new_asset_issuer,
-        volume_applied: simulation.volume_applied,
         quotation_date: simulation.quotation_date,
         agio_percentage: simulation.agio_percentage,
         final_variation: simulation.final_variation,

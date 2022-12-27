@@ -10,7 +10,6 @@ class Simulation < ApplicationRecord
   validates :days_in_years, presence: true
   validates :new_asset_code, presence: true
   validates :new_asset_issuer, presence: true
-  validates :volume_applied, presence: true
   validates :quotation_date, presence: true
   validates :new_asset_remaining_years, presence: true
   validates :agio_percentage, presence: true

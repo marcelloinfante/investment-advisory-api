@@ -59,7 +59,7 @@ class Api::V1::AssetsController < ApplicationController
   private
 
   def asset_params
-    params.permit(:id, :client_id, :code, :issuer, :rate_index,
-    :entrance_rate, :quantity, :application_date, :expiration_date)
+    params.permit(:id, :client_id, :code, :issuer, :rate_index, :entrance_rate,
+    :quantity, :volume_applied, :application_date, :expiration_date)
   end
 end

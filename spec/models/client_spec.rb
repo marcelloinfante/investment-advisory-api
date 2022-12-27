@@ -44,4 +44,29 @@ RSpec.describe Client, type: :model do
       end
     end
   end
+
+  describe "public methods" do
+    let(:user) { create(:user) }
+    let(:client) { create(:client, user:) }
+    let(:assets) { create_list(:asset, 5, client:) }
+
+    context "number_of_assets" do
+      it "return the number of client assets" do
+        number_of_assets = Client.first.number_of_assets
+  
+        expect(number_of_assets).to eq(5)
+      end
+    end
+
+    context "total_amount_in_custody" do
+      it "return the total amount in custody" do
+        client = Client.first
+        total_amount_in_custody = client.total_amount_in_custody
+
+        total_volume_applied = client.assets.map { |asset| asset[:volume_applied] }.sum
+
+        expect(total_amount_in_custody).to eq(total_volume_applied)
+      end
+    end
+  end
 end

@@ -19,7 +19,6 @@ class Simulation::CalculateAttributes
       average_cdi: context.formatted_params[:average_cdi],
       market_rate: context.formatted_params[:market_rate],
       curve_volume: context.formatted_params[:curve_volume],
-      volume_applied: context.formatted_params[:volume_applied],
       new_asset_code: context.formatted_params[:new_asset_code],
       quotation_date: context.formatted_params[:quotation_date],
       new_asset_issuer: context.formatted_params[:new_asset_issuer],
@@ -36,15 +35,15 @@ class Simulation::CalculateAttributes
   private
 
   def agio
-    context.formatted_params[:market_redemption] - context.formatted_params[:curve_volume]
+    (context.formatted_params[:market_redemption] - context.formatted_params[:curve_volume]).to_f.round(4)
   end
 
   def agio_percentage
-    (context.formatted_params[:market_redemption] / context.formatted_params[:curve_volume]) - 1
+    ((context.formatted_params[:market_redemption] / context.formatted_params[:curve_volume]) - 1).to_f.round(4)
   end
 
   def percentage_to_recover
-    (context.formatted_params[:curve_volume] / context.formatted_params[:market_redemption]) - 1
+    ((context.formatted_params[:curve_volume] / context.formatted_params[:market_redemption]) - 1).to_f.round(4)
   end
 
   def days_in_years
