@@ -46,12 +46,12 @@ RSpec.describe Client, type: :model do
   end
 
   describe "public methods" do
-    let(:user) { create(:user) }
-    let(:client) { create(:client, user:) }
-    let(:assets) { create_list(:asset, 5, client:) }
-
     context "number_of_assets" do
       it "return the number of client assets" do
+        user = create(:user)
+        client = create(:client, user:)
+        assets = create_list(:asset, 5, client:)
+
         number_of_assets = Client.first.number_of_assets
   
         expect(number_of_assets).to eq(5)
@@ -60,6 +60,10 @@ RSpec.describe Client, type: :model do
 
     context "total_amount_in_custody" do
       it "return the total amount in custody" do
+        user = create(:user)
+        client = create(:client, user:)
+        assets = create_list(:asset, 5, client:)
+
         client = Client.first
         total_amount_in_custody = client.total_amount_in_custody
 
