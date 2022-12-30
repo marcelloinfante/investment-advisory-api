@@ -22,7 +22,7 @@ class Client < ApplicationRecord
     assets.length
   end
 
-  def total_amount_in_custody
+  def total_in_custody
     (assets.map { |asset| asset[:volume_applied] }.sum).to_f.round(4)
   end
 end

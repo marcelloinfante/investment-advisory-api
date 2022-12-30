@@ -13,7 +13,7 @@ RSpec.describe ClientSerializer do
         last_name: client.last_name,
         first_name: client.first_name,
         number_of_assets: client.number_of_assets,
-        total_amount_in_custody: client.total_amount_in_custody
+        total_in_custody: client.total_in_custody
       })
     end
   end

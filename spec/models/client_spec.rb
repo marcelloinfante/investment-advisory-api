@@ -58,18 +58,18 @@ RSpec.describe Client, type: :model do
       end
     end
 
-    context "total_amount_in_custody" do
+    context "total_in_custody" do
       it "return the total amount in custody" do
         user = create(:user)
         client = create(:client, user:)
         assets = create_list(:asset, 5, client:)
 
         client = Client.first
-        total_amount_in_custody = client.total_amount_in_custody
+        total_in_custody = client.total_in_custody
 
         total_volume_applied = client.assets.map { |asset| asset[:volume_applied] }.sum
 
-        expect(total_amount_in_custody).to eq(total_volume_applied)
+        expect(total_in_custody).to eq(total_volume_applied)
       end
     end
   end

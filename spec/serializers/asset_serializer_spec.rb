@@ -17,8 +17,8 @@ RSpec.describe AssetSerializer do
         rate_index: asset.rate_index,
         entrance_rate: asset.entrance_rate,
         volume_applied: asset.volume_applied,
-        expiration_date: asset.expiration_date.to_i,
-        application_date: asset.application_date.to_i
+        expiration_date: asset.expiration_date,
+        application_date: asset.application_date
       })
     end
   end

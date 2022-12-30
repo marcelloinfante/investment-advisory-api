@@ -487,7 +487,7 @@ RSpec.describe Api::V1::ClientsController, type: :request do
         params[:id] = serialized_client[:id]
 
         serialized_client.delete(:number_of_assets)
-        serialized_client.delete(:total_amount_in_custody)
+        serialized_client.delete(:total_in_custody)
 
         expect(serialized_client).to eq(params.transform_keys(&:to_s))
       end
@@ -497,7 +497,7 @@ RSpec.describe Api::V1::ClientsController, type: :request do
         params[:id] = returned_client["id"]
 
         returned_client.delete("number_of_assets")
-        returned_client.delete("total_amount_in_custody")
+        returned_client.delete("total_in_custody")
 
         expect(returned_client).to eq(params.transform_keys(&:to_s))
       end

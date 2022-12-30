@@ -819,12 +819,16 @@ RSpec.describe Api::V1::AssetsController, type: :request do
         serialized_asset = AssetSerializer.new(asset).sanitized_hash
         params[:id] = serialized_asset[:id]
 
-        params[:application_date] = params[:application_date].to_i
-        params[:expiration_date] = params[:expiration_date].to_i
+        params[:application_date] = params[:application_date].to_s.slice(0, 10)
+        params[:expiration_date] = params[:expiration_date].to_s.slice(0, 10)
         params[:entrance_rate] = params[:entrance_rate].to_s
 
         serialized_asset[:client_id] = client.id
         serialized_asset[:entrance_rate] = serialized_asset[:entrance_rate].to_s
+        serialized_asset[:volume_applied] = serialized_asset[:volume_applied].to_f
+
+        serialized_asset[:application_date] = serialized_asset[:application_date].to_s.slice(0, 10)
+        serialized_asset[:expiration_date] = serialized_asset[:expiration_date].to_s.slice(0, 10)
 
         expect(serialized_asset).to eq(params.transform_keys(&:to_s))
       end
@@ -833,12 +837,14 @@ RSpec.describe Api::V1::AssetsController, type: :request do
         returned_asset = JSON.parse(response.body).transform_keys(&:to_sym)
 
         params[:id] = returned_asset[:id]
-        params[:application_date] = params[:application_date].to_i
-        params[:expiration_date] = params[:expiration_date].to_i
+        params[:application_date] = params[:application_date].to_s.slice(0, 10)
+        params[:expiration_date] = params[:expiration_date].to_s.slice(0, 10)
         params[:entrance_rate] = params[:entrance_rate].to_s
         params[:volume_applied] = params[:volume_applied].to_s
 
         returned_asset[:client_id] = client.id
+        returned_asset[:application_date] = returned_asset[:application_date].slice(0, 10)
+        returned_asset[:expiration_date] = returned_asset[:expiration_date].slice(0, 10)
 
         expect(returned_asset).to eq(params)
       end
@@ -1004,6 +1010,12 @@ RSpec.describe Api::V1::AssetsController, type: :request do
         serialized_asset = AssetSerializer.new(asset).sanitized_hash
         serialized_asset[:entrance_rate] = serialized_asset[:entrance_rate].to_s
         serialized_asset[:volume_applied] = serialized_asset[:volume_applied].to_s
+
+        serialized_asset[:application_date] = serialized_asset[:application_date].to_s.slice(0, 10)
+        serialized_asset[:expiration_date] = serialized_asset[:expiration_date].to_s.slice(0, 10)
+
+        returned_asset["application_date"] = returned_asset["application_date"].slice(0, 10)
+        returned_asset["expiration_date"] = returned_asset["expiration_date"].slice(0, 10)
 
         expect(returned_asset).to eq(serialized_asset.transform_keys(&:to_s))
       end
