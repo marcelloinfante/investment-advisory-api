@@ -12,7 +12,9 @@ class Simulation::CalculateAttributes
       current_final_value:,
       percentage_to_recover:,
       variation_same_period:,
+      relative_final_variation:,
       new_asset_remaining_years:,
+      relative_variation_same_period:,
       new_rate_final_value_new_period:,
       new_rate_final_value_same_period:,
       asset: context.formatted_params[:asset],
@@ -76,6 +78,14 @@ class Simulation::CalculateAttributes
 
   def final_variation
     (new_rate_final_value_new_period - current_final_value).to_f.round(4)
+  end
+
+  def relative_variation_same_period
+    (variation_same_period / current_final_value).to_f.round(4)
+  end
+
+  def relative_final_variation
+    (final_variation / current_final_value).to_f.round(4)
   end
 
   def is_worth

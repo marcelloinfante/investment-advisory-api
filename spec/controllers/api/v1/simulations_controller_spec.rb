@@ -1991,6 +1991,8 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
           new_asset_maximum_rate: result[:new_asset_maximum_rate].to_s,
           new_asset_suggested_rate: result[:new_asset_suggested_rate].to_s,
           new_asset_indicative_rate: result[:new_asset_indicative_rate].to_s,
+          relative_final_variation: result[:relative_final_variation].to_s,
+          relative_variation_same_period: result[:relative_variation_same_period].to_s,
           new_asset_expiration_date: returned_simulation[:new_asset_expiration_date].to_s,
           new_rate_final_value_same_period: result[:new_rate_final_value_same_period].to_s,
           new_rate_final_value_new_period: result[:new_rate_final_value_new_period].to_s,

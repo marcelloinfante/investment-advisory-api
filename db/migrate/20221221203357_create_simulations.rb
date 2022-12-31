@@ -25,6 +25,8 @@ class CreateSimulations < ActiveRecord::Migration[7.0]
       t.decimal :variation_same_period
       t.decimal :new_rate_final_value_new_period
       t.decimal :final_variation
+      t.decimal :relative_final_variation
+      t.decimal :relative_variation_same_period
       t.boolean :is_worth
       t.datetime :discarded_at
       t.belongs_to :asset, foreign_key: true

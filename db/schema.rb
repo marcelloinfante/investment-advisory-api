@@ -77,6 +77,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_21_203357) do
     t.decimal "variation_same_period"
     t.decimal "new_rate_final_value_new_period"
     t.decimal "final_variation"
+    t.decimal "relative_final_variation"
+    t.decimal "relative_variation_same_period"
     t.boolean "is_worth"
     t.datetime "discarded_at"
     t.bigint "asset_id"

@@ -25,6 +25,8 @@ class Simulation < ApplicationRecord
   validates :new_asset_suggested_rate, presence: true
   validates :new_asset_indicative_rate, presence: true
   validates :new_asset_expiration_date, presence: true
+  validates :relative_final_variation, presence: true
+  validates :relative_variation_same_period, presence: true
   validates :new_rate_final_value_same_period, presence: true
   validates :new_rate_final_value_new_period, presence: true
 end

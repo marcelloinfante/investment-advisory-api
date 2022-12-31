@@ -23,6 +23,8 @@ FactoryBot.define do
     new_asset_maximum_rate { Faker::Number.decimal(l_digits: 2, r_digits: 2) }
     new_asset_suggested_rate { Faker::Number.decimal(l_digits: 2, r_digits: 2) }
     new_asset_indicative_rate { Faker::Number.decimal(l_digits: 2, r_digits: 2) }
+    relative_final_variation {  Faker::Number.decimal(l_digits: 2, r_digits: 2) }
+    relative_variation_same_period {  Faker::Number.decimal(l_digits: 2, r_digits: 2) }
     new_rate_final_value_same_period { Faker::Number.decimal(l_digits: 2, r_digits: 2) }
     new_rate_final_value_new_period { Faker::Number.decimal(l_digits: 2, r_digits: 2) }
   end

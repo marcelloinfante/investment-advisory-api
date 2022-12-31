@@ -26,6 +26,8 @@ class SimulationSerializer
   attribute :new_asset_suggested_rate
   attribute :new_asset_indicative_rate
   attribute :new_asset_expiration_date
+  attribute :relative_final_variation
+  attribute :relative_variation_same_period
   attribute :new_rate_final_value_same_period
   attribute :new_rate_final_value_new_period
 end

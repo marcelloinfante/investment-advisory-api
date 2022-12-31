@@ -35,6 +35,8 @@ RSpec.describe SimulationSerializer do
         new_asset_remaining_years: simulation.new_asset_remaining_years,
         new_asset_indicative_rate: simulation.new_asset_indicative_rate,
         new_asset_expiration_date: simulation.new_asset_expiration_date,
+        relative_final_variation: simulation.relative_final_variation, 
+        relative_variation_same_period: simulation.relative_variation_same_period, 
         new_rate_final_value_same_period: simulation.new_rate_final_value_same_period,
         new_rate_final_value_new_period: simulation.new_rate_final_value_new_period
       })

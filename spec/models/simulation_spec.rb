@@ -25,6 +25,8 @@ RSpec.describe Simulation, type: :model do
       it { should validate_presence_of(:new_asset_suggested_rate) }
       it { should validate_presence_of(:new_asset_indicative_rate) }
       it { should validate_presence_of(:new_asset_expiration_date) }
+      it { should validate_presence_of(:relative_final_variation) }
+      it { should validate_presence_of(:relative_variation_same_period) }
       it { should validate_presence_of(:new_rate_final_value_same_period) }
       it { should validate_presence_of(:new_rate_final_value_new_period) }
     end
