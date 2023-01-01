@@ -18,9 +18,9 @@ class SimulationSerializer
   attribute :remaining_years
   attribute :market_redemption
   attribute :current_final_value
-  attribute :current_final_value
   attribute :new_asset_duration
   attribute :percentage_to_recover
+  attribute :variation_same_period
   attribute :new_asset_minimum_rate
   attribute :new_asset_maximum_rate
   attribute :new_asset_suggested_rate

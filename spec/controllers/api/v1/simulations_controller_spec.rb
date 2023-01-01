@@ -1987,6 +1987,7 @@ RSpec.describe Api::V1::SimulationsController, type: :request do
           current_final_value: result[:current_final_value].to_s,
           new_asset_duration: result[:new_asset_duration].to_s,
           percentage_to_recover: result[:percentage_to_recover].to_f.to_s,
+          variation_same_period: result[:variation_same_period].to_s,
           new_asset_minimum_rate: result[:new_asset_minimum_rate].to_s,
           new_asset_maximum_rate: result[:new_asset_maximum_rate].to_s,
           new_asset_suggested_rate: result[:new_asset_suggested_rate].to_s,

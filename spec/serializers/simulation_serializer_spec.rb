@@ -29,6 +29,7 @@ RSpec.describe SimulationSerializer do
         current_final_value: simulation.current_final_value,
         new_asset_duration: simulation.new_asset_duration,
         percentage_to_recover: simulation.percentage_to_recover,
+        variation_same_period: simulation.variation_same_period,
         new_asset_minimum_rate: simulation.new_asset_minimum_rate,
         new_asset_maximum_rate: simulation.new_asset_maximum_rate,
         new_asset_suggested_rate: simulation.new_asset_suggested_rate,

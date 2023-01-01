@@ -20,6 +20,7 @@ RSpec.describe Simulation, type: :model do
       it { should validate_presence_of(:current_final_value) }
       it { should validate_presence_of(:new_asset_duration) }
       it { should validate_presence_of(:percentage_to_recover) }
+      it { should validate_presence_of(:variation_same_period) }
       it { should validate_presence_of(:new_asset_minimum_rate) }
       it { should validate_presence_of(:new_asset_maximum_rate) }
       it { should validate_presence_of(:new_asset_suggested_rate) }

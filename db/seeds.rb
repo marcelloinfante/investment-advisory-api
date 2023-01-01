@@ -1,4 +1,4 @@
-user = FactoryBot.create(:user, email: "john@marshal.com", first_name: "John", last_name: "Marshal", password: "test123", password_confirmation: "test123")
+user = FactoryBot.create(:user, email: "test@test.com", first_name: "John", last_name: "Marshal", password: "test123", password_confirmation: "test123")
 
 clients = FactoryBot.create_list(:client, 5, user:)
 

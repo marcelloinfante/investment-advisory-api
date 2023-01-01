@@ -20,6 +20,7 @@ class Simulation < ApplicationRecord
   validates :current_final_value, presence: true
   validates :new_asset_duration, presence: true
   validates :percentage_to_recover, presence: true
+  validates :variation_same_period, presence: true
   validates :new_asset_minimum_rate, presence: true
   validates :new_asset_maximum_rate, presence: true
   validates :new_asset_suggested_rate, presence: true
