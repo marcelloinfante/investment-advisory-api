@@ -24,4 +24,4 @@ docker-compose run web rspec
 ```
 
 ## Test Coverage
-![Captura de tela 2023-07-27 151538](https://github.com/marcelloinfante/investment-advisory-api/assets/80683232/8e9ab89f-83a9-4ccb-818a-0ebc5c694577)
+99.5%
