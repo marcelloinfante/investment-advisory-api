@@ -1,24 +1,27 @@
-# README
+# Investiment Advisory API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Investiment Advisory is an application designed to assist investment advisors in identifying suitable investment opportunities for their clients.
 
-Things you may want to cover:
+## Quick Start
+### Build the docker image
+```
+docker-compose build
+```
 
-* Ruby version
+### Run the server
+```
+docker-compose up
+```
 
-* System dependencies
+### Stop the server
+```
+docker-compose down
+```
 
-* Configuration
+### Run tests
+```
+docker-compose run web rspec
+```
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Test Coverage
+![Captura de tela 2023-07-27 151538](https://github.com/marcelloinfante/investment-advisory-api/assets/80683232/eb69f824-cece-4847-aee5-f1d3f3e43e4b)
